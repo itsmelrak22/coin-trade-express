@@ -18,13 +18,13 @@
         <span class="amount" style="font-size: 45px; font-weight: bold; color: #f09e23;">{{ Account.Asset }}.00</span>
         <v-row>
           <v-col cols="12" sm="6">
-            <v-btn block color="success" class="ml-2" style="border-radius:10px">
+            <v-btn block color="success" class="ml-2" style="border-radius:10px" @click="GotoRecharge()">
               DEPOSIT
             </v-btn>
           </v-col>
 
           <v-col cols="12" sm="6">
-            <v-btn block color="primary" class="mr-3 pr-3" style="border-radius:10px">
+            <v-btn block color="primary" class="mr-3 pr-3" style="border-radius:10px" @click="GotoWithdrawal()">
               WITHDRAW
             </v-btn>
           </v-col>
@@ -79,7 +79,38 @@
             </tbody>
           </v-simple-table>
         </v-card>
-      
+        <template>
+          <v-footer plain padless class="footer">
+            <v-bottom-navigation  color="primary" fixed>
+              <v-row no-gutters>
+                <v-col class="text-center" cols="4">
+                  <v-btn @click="Home" block>
+                    <v-icon>
+                      mdi-home-analytics
+                    </v-icon>
+                    Home
+                  </v-btn>
+                </v-col>
+                <v-col class="text-center" cols="4">
+                  <v-btn block @click="Order">
+                    <v-icon>
+                      mdi-chart-line-stacked
+                    </v-icon>
+                    Order
+                  </v-btn>
+                </v-col>
+                <v-col class="text-center" cols="4">
+                  <v-btn @click="Center" block>
+                    <v-icon>
+                      mdi-account
+                    </v-icon>
+                    My Center
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-bottom-navigation>
+          </v-footer>
+        </template>
     </div>
   </div>
 </template>
@@ -103,14 +134,24 @@ export default {
               console.log(res.data[i])
               this.Account = res.data[i]
             }
-           
-
           }
-            // this.Account = res.data[0];
-            // console.log(this.Account);
         });
-    }
-         
+    },
+    GotoRecharge(){
+      this.$router.push("/DepositView");
+    },
+    GotoWithdrawal(){
+      this.$router.push("/Withdrawal");
+    },
+    Home(){
+      this.$router.push('/')
+    },
+    Center(){
+      this.$router.push('/AccountInfo')
+    },
+    Order(){
+      this.$router.push('/Order')
+    },
     },
 }
 </script>
@@ -146,5 +187,16 @@ p {
   line-height: 40px;
   text-align: left;
 }
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+}
 
+@media (max-width: 600px) {
+  .footer {
+    padding: 10px;
+  }
+}
 </style>

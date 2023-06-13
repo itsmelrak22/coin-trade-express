@@ -93,11 +93,11 @@
                 <td>
                   <center>
                     <!-- red -->
-                    <v-chip v-if="item.change <= 0" :color="item.change < 0 ? 'error' : 'success'">
+                    <v-chip dark v-if="item.change <= 0" :color="item.change < 0 ? 'error' : '#12a36e'">
                       {{item.change}}%
                     </v-chip>
                     <!-- green -->
-                    <v-chip v-if="item.change > 0" :color="item.change > 0 ? 'success' : 'error'">
+                    <v-chip dark v-if="item.change > 0" :color="item.change > 0 ? '#12a36e' : 'error'">
                       {{item.change}}%
                     </v-chip>
                   </center>
@@ -108,7 +108,7 @@
 
           <template>
             <v-footer plain padless class="footer">
-              <v-bottom-navigation :value="value" color="primary" fixed>
+              <v-bottom-navigation  color="primary" fixed>
                 <v-row no-gutters>
                   <v-col class="text-center" cols="4">
                     <v-btn @click="Home" block>
