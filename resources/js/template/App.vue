@@ -1,7 +1,8 @@
 <template>
   <v-app app >
-   <app-drawer :drawer="drawer" @toggleDrawer="toggleDrawer"></app-drawer>
-   <app-header :drawer="drawer" @toggleDrawer="toggleDrawer($event)"></app-header>
+   <!-- <app-drawer :drawer="drawer" @toggleDrawer="toggleDrawer"></app-drawer>
+   :drawer="drawer" -->
+   <app-header  @toggleDrawer="toggleDrawer($event)"></app-header>
    <app-alert></app-alert>
    <app-loader></app-loader>
       <v-main  class="ma-2">
@@ -21,20 +22,20 @@ import Drawer from '../modules/Drawer.vue';
          "app-header" : Header,
          "app-alert" : Alert,
          "app-loader" : Loader,
-         "app-drawer" : Drawer,
+         // "app-drawer" : Drawer,
       },
 
       data: () => ({
-         drawer: true,
+         // drawer: true,
          csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       }),
       created(){
       },
 
       methods: {
-         toggleDrawer(toggle){
-            this.drawer = toggle
-         }
+         // toggleDrawer(toggle){
+         //    this.drawer = toggle
+         // }
       },
 
       computed: {

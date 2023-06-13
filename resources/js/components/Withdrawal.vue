@@ -20,6 +20,7 @@
 
                         <span>Please Select a BankCard:</span>
                         <v-autocomplete
+                        :items="bank" 
                         outlined
                         dense
                         ></v-autocomplete>
@@ -44,7 +45,23 @@
 
 <script>
 export default {
+    data:()=>({
+        bank : [
+            'UNITED OVERSEAS BANK LTD',
+            'ANEXT BANK PTE. LTD.',
+            'AUSTRALIA AND NEW ZEALAND BANKING GROUP LIMITED',
+            'BANK OF CHINA LIMITED',
+            'BNP PARIBAS',
+            'CIMB BANK BERHAD',
+            'CITIBANK NA SINGAPORE'
+        ]
+    }),
 
+    methods:{
+        backMain(){
+            this.$router.push('/')
+        }
+    }
 }
 </script>
 
