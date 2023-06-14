@@ -27,23 +27,12 @@ use App\Http\Controllers\DepositController;
 //     return $request->user();
 // });
 
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/getUser', function(Request $request){
-    // return $request;
-    return User::find($request->id);
-});
+
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/master/permissions', [PermissionController::class, 'index']);
-    Route::post('/master/permission/store', [PermissionController::class, 'store']);
-    Route::post('/master/permission/update/{permission}', [PermissionController::class, 'update']); //> {permission} == id yan ng permission, need nyo ipadala pag nag axios kayo
-    Route::post('/master/permission/delete/{permission}', [PermissionController::class, 'delete']); //> {permission} == id yan ng permission, need nyo ipadala pag nag axios kayo
     
     Route::get('/master/roles', [RoleController::class, 'index']);
-    Route::post('/master/role/store', [RoleController::class, 'store']);
-    Route::post('/master/role/update/{role}', [RoleController::class, 'update']); //> {role} == id yan ng role, need nyo ipadala pag nag axios kayo
-    Route::post('/master/role/delete/{role}', [RoleController::class, 'delete']); //> {role} == id yan ng role, need nyo ipadala pag nag axios kayo
-
 
     Route::get('/AccountInfo', [UserController::class, 'index']);
     Route::post('/user/update/{user}', [UserController::class, 'update']);
@@ -59,7 +48,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/accounts', [AccountController::class, 'index']);
     Route::post('/account/store', [AccountController::class, 'store']);
     Route::post('/account/update/{account}', [AccountController::class, 'update']);
-
 
 
     Route::get('/market', [MarketTradeController::class, 'index']);
