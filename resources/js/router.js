@@ -24,6 +24,7 @@ import AdminSideDepo from './components/AdminSideDepo'
 import AccountInfo from './components/AccountInfo'
 
 import Withdrawal from './components/Withdrawal'
+import BankCard from './components/BankCard'
 
 export default new VueRouter({
     mode: 'history',
@@ -132,6 +133,12 @@ export default new VueRouter({
             path: '/Withdrawal',
             name: 'Withdrawal',
             component: Withdrawal
+        },
+
+        {
+            path: '/BankCard',
+            name: 'BankCard',
+            component: BankCard
         },
     ],
 });

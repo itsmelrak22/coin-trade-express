@@ -27,6 +27,8 @@
                     <p>Sign in with your Email and Password:</p>
                     <v-form id="LoginForm" ref="LoginForm" v-on:submit.prevent="handleLogin">
 
+                      
+
                       <v-text-field
                         type="email"
                         label="Email"
@@ -78,6 +80,21 @@
                   <v-card-text>
                     <p>Register with your employee :</p>
                     <v-form id="RegisterForm" ref="RegisterForm" v-on:submit.prevent="handleRegistration">
+
+                      <v-autocomplete
+                        :items="country"
+                        item-text="country"
+                        label="Country"
+                        name="coutry"
+                        v-model="employee.coutry"
+                        prepend-icon="mdi-flag"
+                        required
+                        @focus="$event.target.removeAttribute('readonly');"
+                        outlined
+                        dense
+                        :rules="rules.required"
+                      ></v-autocomplete>
+
                       <v-text-field
                         type="text"
                         label="Name"
@@ -140,6 +157,21 @@
                         name="password_confirmation"
                         :rules="rules.confirmpassword(employee.password_confirmation,employee.password)"
                       ></v-text-field>
+
+                      <v-text-field
+                      type="text"
+                      label="Invitation Code"
+                      name="Incode"
+                      v-model="employee.InCode"
+                      prepend-icon="mdi-barcode"
+                      required
+                      readonly 
+                      autocomplete="off"
+                      @focus="$event.target.removeAttribute('readonly');"
+                      outlined
+                      dense
+                      :rules="rules.required"
+                    ></v-text-field>
                      
                       <v-divider></v-divider>
                       <v-card-actions :class="{ 'pa-3': $vuetify.breakpoint.smAndUp }">
@@ -164,7 +196,6 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import md5 from 'js-md5'
 export default {
     name : 'LoginPage',
     data() {
@@ -174,6 +205,7 @@ export default {
             loading: false,
             employee : {},
             tab : null,
+            country : [],
         };
     },
     computed: {
@@ -284,11 +316,24 @@ export default {
           })
         }
       },
+      GetCountry(){
+        axios.get(`https://countriesnow.space/api/v0.1/countries`).then((res)=>{
+          this.country = res.data.data
+          console.log(this.country )
+        })
+      },
+      test(){
+        console.log(this.employee)
+      }
+      
          
+    },
+    created(){
+      this.employee.coutry = "India"
     },
 
     mounted() {
-      
+      this.GetCountry();
     },
     watch: {
     },

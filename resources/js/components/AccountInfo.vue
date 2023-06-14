@@ -51,7 +51,7 @@
           <v-simple-table>
             <tbody>
               <tr>
-                <td>Bank Card</td>
+                <td @click="BankCard()">Bank Card</td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -152,6 +152,10 @@ export default {
     Order(){
       this.$router.push('/Order')
     },
+
+    BankCard(){
+      this.$router.push('/BankCard')
+    }
     },
 }
 </script>
