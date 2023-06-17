@@ -160,7 +160,7 @@ this.getTradeOrder();
             if(this.functionName != 'Transaction'){
                 clearInterval(interval)
             }
-            axios.get(`http://127.0.0.1:8000/api/TradeOrders`).then((res) => {
+            axios.get(`api/TradeOrders`).then((res) => {
                 // if(res.data){
                     for(let i = 0; i < res.data.length; i++){
                         if(res.data[i].User_code == this.loggedInUser.id){
@@ -193,11 +193,11 @@ this.getTradeOrder();
             
                 item.result = parseFloat(item.quantity) + parseFloat(item.profit);
                 console.log('item dto sa order',item)
-                axios.post(`http://127.0.0.1:8000/api/calculateCount`, item).then((response) => {
+                axios.post(`api/calculateCount`, item).then((response) => {
                         this.getTradeOrder(); 
                         //admin win or loost bawas o dagdag ng pera
 
-                axios.post(`http://127.0.0.1:8000/api/adminprocess`,item).then((res)=>{
+                axios.post(`api/adminprocess`,item).then((res)=>{
                     // alert('success')
                 })
 
