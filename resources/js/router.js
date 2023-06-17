@@ -25,6 +25,7 @@ import AccountInfo from './components/AccountInfo'
 
 import Withdrawal from './components/Withdrawal'
 import BankCard from './components/BankCard'
+// import RechargeHistory from './components/RechargeHistory'
 
 export default new VueRouter({
     mode: 'history',
@@ -140,5 +141,10 @@ export default new VueRouter({
             name: 'BankCard',
             component: BankCard
         },
+        // {
+        //     path: '/RechargeHistory',
+        //     name: 'RechargeHistory',
+        //     component: RechargeHistory
+        // },
     ],
 });

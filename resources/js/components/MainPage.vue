@@ -138,6 +138,13 @@
               </v-bottom-navigation>
             </v-footer>
           </template>
+          <v-overlay :value="overlay">
+            <v-progress-circular
+            color="white"
+            indeterminate
+            :size="150"
+            ></v-progress-circular>
+        </v-overlay>
         </div>
       </div>
     </div>
@@ -162,6 +169,7 @@ export default {
         volume : '',
         php : 0,
         cryptoTable: [],
+        overlay : false,
     }),
 
     created(){
@@ -184,9 +192,12 @@ export default {
          },
 
         GetTradeDetails(){
+          // this.overlay = true;
             axios.get(`https://omicomadswork.com/api/currency/getSymbol`).then((res)=>{
+
               this.cryptoTable = res.data.result
-              console.log('call', this.cryptoTable)
+              // this.overlay = false;
+              // console.log('call', this.cryptoTable)
               this.CoinDataBTC = this.cryptoTable[0]
               this.CoinDataETH = this.cryptoTable[1]
               this.CoinDataLTC = this.cryptoTable[3]

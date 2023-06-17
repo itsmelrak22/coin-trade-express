@@ -16,7 +16,7 @@ import {mapState} from 'vuex';
 import Header from '../modules/Header.vue';
 import Alert from '../modules/Alert.vue';
 import Loader from '../modules/Loader.vue';
-import Drawer from '../modules/Drawer.vue';
+// import Drawer from '../modules/Drawer.vue';
    export default {
       components: {
          "app-header" : Header,

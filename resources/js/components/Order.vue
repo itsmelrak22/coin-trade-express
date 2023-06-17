@@ -30,12 +30,12 @@
                                 <v-col
                                     ><span
                                         :style="
-                                            item.direction == 'sell'
+                                            item.type == 'sell'
                                                 ? 'font-weight:bold;color: #B31312'
                                                 : 'font-weight:bold;color:#609966 '
                                         "
                                         >{{
-                                            item.direction == "sell"
+                                            item.type == "sell"
                                                 ? "Down"
                                                 : "Up"
                                         }}</span
@@ -47,14 +47,13 @@
                                     >
                                     <span style="font-size:11px"
                                     
-                                        >Close Time {{
+                                        >Close Time {{ 
                                             item.closing_time
                                         }}</span
                                         
                                     >
           
-                                    </v-col
-                                >
+                                    </v-col>
                             </v-row>
                             <v-row>
                             <v-col><span>{{item.contract}}</span><br/></v-col>
@@ -72,6 +71,7 @@
                             <v-col><span>time</span><br/></v-col>
                             <v-col><span>P/L[BTC]</span><br/></v-col>
                             <v-col><span>status </span><br/></v-col>
+                            <v-col><span>Preset </span><br/></v-col>
                         
                             </v-row>
                     
@@ -79,6 +79,12 @@
                             <v-col>{{item.seconds}}Sec</v-col>
                             <v-col>{{item.profit}}</v-col>
                             <v-col>{{item.trading}}</v-col>
+                            <v-col><span
+                                :style="
+                                    item.preset == 'Lost'   ? 'font-weight:bold;color: #B31312'  : 'font-weight:bold;color:#609966 '
+                                "
+                                >{{item.preset}}</span
+                            ></v-col>
                             </v-row>
                             <v-row>
                            
@@ -154,61 +160,52 @@ this.getTradeOrder();
             if(this.functionName != 'Transaction'){
                 clearInterval(interval)
             }
-                axios.get(`http://127.0.0.1:8000/api/TradeOrders`).then((res) => {
-                this.gettradeorders = res.data
-    
-
-
-    this.gettradeorders.forEach((item,index) => {
-        let daycut = moment().format("YYYY-MM-DD HH:mm:ss");
-        let string = daycut;
-        let targetMoment1 = moment(`${string}`);
-        let targetMoment2 = moment(`${item.closing_time}`);
-
-        let diffInSeconds = targetMoment2.diff(targetMoment1, "seconds");
-
-        item.counting = diffInSeconds +1;
-
-        // let interval = setInterval(() => {
-
-        if ( item.counting == 0) {
-        alert('1')
-            clearInterval(interval);
-            this.updateTradingValue(item);
-
-        }else if(item.counting <= 0 && item.trading === 'pending'){
-            alert('2')
-            clearInterval(interval);
-
-            this.updateTradingValue(item);
-
-        }
-        item.counting--;
-    
-    })
-
-
-    });
+            axios.get(`http://127.0.0.1:8000/api/TradeOrders`).then((res) => {
+                // if(res.data){
+                    for(let i = 0; i < res.data.length; i++){
+                        if(res.data[i].User_code == this.loggedInUser.id){
+                            this.gettradeorders = res.data
+                                this.gettradeorders.forEach((item,index) => {
+                                    let daycut = moment().format("YYYY-MM-DD HH:mm:ss");
+                                    let string = daycut;
+                                    let targetMoment1 = moment(`${string}`);
+                                    let targetMoment2 = moment(`${item.closing_time}`);
+                                    let diffInSeconds = targetMoment2.diff(targetMoment1, "seconds");
+                                    item.counting = diffInSeconds +1;
+                                    // let interval = setInterval(() => {
+                                    if ( item.counting == 0) {
+                                    console.log('1')
+                                        clearInterval(interval);
+                                        this.updateTradingValue(item);
+                                    }else if(item.counting <= 0 && item.trading === 'pending'){
+                                        console.log('2')
+                                        clearInterval(interval);
+                                        this.updateTradingValue(item);
+                                    }
+                                    item.counting--;
+                            })
+                        }
+                    }
+            });
         },2000 );
             },
             updateTradingValue(item) {
             
                 item.result = parseFloat(item.quantity) + parseFloat(item.profit);
                 console.log('item dto sa order',item)
-                axios.post(`http://127.0.0.1:8000/api/calculateCount`, item)
-                    .then((response) => {
+                axios.post(`http://127.0.0.1:8000/api/calculateCount`, item).then((response) => {
                         this.getTradeOrder(); 
                         //admin win or loost bawas o dagdag ng pera
 
                 axios.post(`http://127.0.0.1:8000/api/adminprocess`,item).then((res)=>{
-                    alert('success')
+                    // alert('success')
                 })
 
                     })
                     .catch((error) => {
                     console.error(error);
                     });
-        },
+            },
             Home(){
                 this.$router.push('/')
             },

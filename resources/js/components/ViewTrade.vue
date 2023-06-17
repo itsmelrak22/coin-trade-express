@@ -77,6 +77,8 @@
                             </div>
                         </div>
                         <v-divider> </v-divider>
+                        <!-- {{details}} -->
+
                         <v-simple-table
                             fixed-header
                             dense
@@ -97,7 +99,7 @@
                                 </thead>
                                 <tbody>
                                     <tr
-                                        v-for="(item, i) in getmarket_arr"
+                                        v-for="(item, i) in getmarket_arr.filter((r)=>{return r.No == toTrading.symbol})"
                                         :key="i"
                                     >
                                         <td style="font-size: 12px">
@@ -139,7 +141,11 @@
                         ></v-col
                     >
                     <v-col
-                        ><v-btn dark style="background-color: #d72015" block
+                        ><v-btn 
+                        dark 
+                        style="background-color: #d72015" 
+                        block
+                        @click="upbtn(cryptos)"
                             >Down</v-btn
                         ></v-col
                     >
@@ -278,16 +284,17 @@
                         <span>Expected Earnings</span><br />
                     </v-col>
                     <v-col class="text-right">
-                        <span> {{ loggedInUser.profit }}</span
-                        ><br />
+                        <span> {{ Account.Asset }}</span>
+                        <br />
                         <span class="text-right">
                         {{obj.recharge == null ? 0 : 
                             (obj.profit = parseFloat(obj.recharge)
                              * parseFloat(discount) + 
                             parseFloat(obj.recharge))
                         }} </span
-                        ><br
-                    /></v-col>
+                        ><br/>
+                       
+                    </v-col>
                     </v-row>
                     <v-row>
                     <v-col>
@@ -297,10 +304,18 @@
                 </v-card-text>
             </v-card>
         </v-bottom-sheet>
+        <v-overlay :value="overlay">
+            <v-progress-circular
+            color="white"
+            indeterminate
+            :size="150"
+            ></v-progress-circular>
+        </v-overlay>
     </div>
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import axios from "axios";
 import CoinCharts from "../components/CoinCharts.vue";
 import moment from "moment";
@@ -326,6 +341,9 @@ export default {
         now: "",
         sheet: false,
         errors: [],
+        Account:[],
+        overlay: false,
+        title: 'mdi-check-circle-outline'
     }),
 
     created() {
@@ -336,6 +354,8 @@ export default {
         this.GetDetails();
 
         this.loadLastID();
+
+        this.GetUser();
 
         // this.calculateCount();
 
@@ -351,6 +371,7 @@ export default {
             this.getTickers();
             let lastElement = this.getmarket_arr[this.getmarket_arr.length - 1];
             let countValue = lastElement.Count;
+            
             if (String(this.cryptos1[0].ticker.count) != countValue) {
                 this.addMarketTable();
             }
@@ -362,6 +383,17 @@ export default {
     },
 
     methods: {
+
+        GetUser(){
+            axios.get(`/api/AccountInfo`).then((res) => {
+            for(let i = 0; i < res.data.length; i++){
+                if(this.loggedInUser.id == res.data[i].id){
+                console.log('data',res.data[i])
+                this.Account = res.data[i]
+                }
+            }
+            });
+        },
 
         backMain(){
             this.$router.push("/");
@@ -385,26 +417,6 @@ export default {
                     }
                 });
         },
-
-        // calculateCount() {
-        //     let daycut = moment().format("YYYY-MM-DD HH:mm:ss");
-        //     let string = daycut;
-        //     let targetMoment1 = moment(`${string}`);
-
-        //     let targetMoment2 = moment("2023-06-05 23:18:00");
-
-        //     let diffInSeconds = targetMoment2.diff(targetMoment1, "seconds");
-        //     let count1 = diffInSeconds - 1;
-        //     let interval = setInterval(() => {
-        //         // console.log(count1);
-
-        //         if (count1 === 0) {
-        //             clearInterval(interval);
-        //         }
-
-        //         count1--;
-        //     }, 1000);
-        // },
 
         getTickers() {
             const url1 =
@@ -443,7 +455,7 @@ export default {
                     this.cryptos = response.data.result.list[0];
                     // Handle the API response here
 
-                    console.log(this.cryptos,'s');
+                    // console.log(this.cryptos,'s');
                 })
                 .catch((error) => {
 
@@ -454,7 +466,7 @@ export default {
         getMarketTable() {
             axios.get(`api/market`).then((res) => {
                 this.getmarket_arr = res.data;
-                // console.log(this.getmarket_arr);
+                // console.log('ARRR',this.getmarket_arr);
             });
             //     setInterval(() => {
             //     location.reload();
@@ -469,15 +481,15 @@ export default {
         },
         addMarketTable() {
             // this.obj.change = this.cryptos1[0].ticker.change
-// console.log( this.getmarket_arr)
-console.log(this.cryptos1[0].ticker.count,'sss  ')
+                // console.log( this.getmarket_arr)
+            // console.log(this.cryptos1[0].ticker.count,'sss  ')
 
             this.obj.lastPrice = this.cryptos.lastPrice;
             this.obj.price24hPcnt = this.cryptos.price24hPcnt;
             this.obj.updated_at = moment().format("YYYY-MM-DD HH:mm:ss");
             this.obj.Count = this.cryptos1[0].ticker.count;
             this.obj.No = this.getmarket_arr.length + 1;
-// console.log( this.obj)
+                // console.log( this.obj)
 
             axios
                 .put("api/market/update", this.obj)
@@ -486,11 +498,7 @@ console.log(this.cryptos1[0].ticker.count,'sss  ')
                 });
         },
         upbtn() {
-            this.discount == 0.6
-                ? (this.obj.discountResult = "60")
-                : this.discount == 0.4
-                ? (this.obj.discountResult = "40")
-                : (this.obj.discountResult = "30");
+            this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "40") : (this.obj.discountResult = "30");
             this.obj.userId = this.loggedInUser.id;
             this.obj.email = this.loggedInUser.email;
             this.obj.profit = this.loggedInUser.remember_token;
@@ -499,30 +507,73 @@ console.log(this.cryptos1[0].ticker.count,'sss  ')
             this.sheet = true;
             this.obj.close = this.cryptos1[0].ticker.close;
             this.obj.open = this.cryptos1[0].ticker.open;
+            console.log('UPPPPP',this.obj)
         },
 
         submitbtn() {
+            // Alert
+            var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation : false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar : true,
+                dibOpen : (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            if(this.obj.recharge >= 100){
+                 if(this.Account.Asset > this.obj.recharge ){
+                this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "40") : (this.obj.discountResult = "30");
+                this.obj.trading = "pending";
+                this.obj.T_id = `T${moment().format("YYYYMMDD")}-${this.GenerateTID(this.LastTID)}`
+                this.obj.order_time = moment().format("YYYY-MM-DD HH:mm:ss");
+                this.obj.complete_time = moment().format("YYYY-MM-DD HH:mm:ss");
+                this.obj.profit = this.obj.profit - this.obj.recharge;
+                
+                
+                let d = moment().format("YYYY-MM-DD HH:mm:ss");
+                let a = d.substring(0, 14);
+                let b = parseFloat(d.substring(14, 16)) + 1;
+                let c = d.substring(16, 19);
+                let combine = a + b + c;
+                this.obj.closing_time = moment().format(`${combine}`);
 
-            this.obj.trading = "pending";
-            this.obj.T_id = `T${moment().format("YYYYMMDD")}-${this.GenerateTID(this.LastTID)}`
-            this.obj.order_time = moment().format("YYYY-MM-DD HH:mm:ss");
-            this.obj.complete_time = moment().format("YYYY-MM-DD HH:mm:ss");
-            this.obj.profit = this.obj.profit - this.obj.recharge;
-            
-            
-            let d = moment().format("YYYY-MM-DD HH:mm:ss");
-            let a = d.substring(0, 14);
-            let b = parseFloat(d.substring(14, 16)) + 1;
-            let c = d.substring(16, 19);
-            let combine = a + b + c;
-            this.obj.closing_time = moment().format(`${combine}`);
+                axios.post("api/Dashboard/store", this.obj)
+                    .then((res) => {
+                        this.obj = {};
+                        this.sheet = false;
+                        toastMixin.fire({
+                            icon: 'success',
+                            title : 'Successfully',
+                            animation:true,
+                            text: 'Process Completed',
+                        })
+                    });
+                }else{
+                    toastMixin.fire({
+                        icon: 'error',
+                        title : 'Oppsss....',
+                        animation:true,
+                        text: 'Your Input  is to Above in your E-money',
+                        })
+                }
+            }else{
+                toastMixin.fire({
+                    icon: 'error',
+                    title : 'Oppsss....',
+                    animation:true,
+                    text: 'Minimun Purchese Limit is 100',
+                })
+            }
 
-            console.log('obj',this.obj)
-            console.log('combine',combine);
-            axios.post("api/Dashboard/store", this.obj)
-                .then((res) => {
-                    this.obj = {};
-                });
+
+          
+           
         },
 
         GenerateTID(Last_TID) {
@@ -582,7 +633,7 @@ th {
     overflow: auto;
     height:700px;
     padding: 20px;
-    width: 70%;
+    width: 80%;
     margin: auto;
 }
 </style>
