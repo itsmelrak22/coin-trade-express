@@ -24,7 +24,8 @@ class DepositController extends Controller
 
     public function RechargeDetailsAdmin()
     {
-        return Deposit::all();
+        return Deposit::orderBy('created_at', 'desc')->get();
+        // return TradeOrder::orderBy('created_at', 'desc')->get();
     }
 
     /**
@@ -50,6 +51,7 @@ class DepositController extends Controller
         $deposit->UserID = $request->userid;
         $deposit->UserAccount = $request->useraccount;
         $deposit->Type = $request->methods;
+        $deposit->Screenshot = null;
         $deposit->Amount = $request->amount;
         $deposit->State = $request->state;
         $deposit->Methods = $request->methods;
@@ -181,5 +183,12 @@ class DepositController extends Controller
     public function destroy(Deposit $deposit)
     {
         //
+    }
+
+    public function GetHistory($empcode)
+    {
+        
+        return Deposit::select('deposits.*')->where('UserID', '=', $empcode)->get();
+     
     }
 }

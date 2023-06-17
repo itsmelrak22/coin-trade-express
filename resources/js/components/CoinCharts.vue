@@ -19,6 +19,13 @@
                 <button class="btn btn-primary btn-sm mr-2" :class="[{'active': interval==='1M'}]" @click="updateTimeInterval('1M')">1M</button>
             </div>
         </div>
+        <v-overlay :value="overlay">
+          <v-progress-circular
+          color="white"
+          indeterminate
+          :size="150"
+          ></v-progress-circular>
+      </v-overlay>
         <!-- <div class="spinner" v-if="chartLoading">
             <div class="circle-spinner"></div>
         </div> -->
@@ -42,6 +49,7 @@
         chart: null,
         // chartLoading: true,
         chartType: 'cs',
+        overlay: false,
        
 
       
@@ -64,23 +72,24 @@
     zoomChart() {
 
         if(this.chartData.length > 50){
-
           this.chart.scrollbarChart.zoomToIndexes(this.chartData.length - 40, this.chartData.length - 1);
-
         }
 
       },
       fetchChartData(isUpdate = false) {
-        // this.chartLoading = true
+        this.overlay = true
         //proxyuUrl is done to avoid cross-origin error as it is directly called from javascript.
-        const apiurl = encodeURIComponent(`https://api.binance.com/api/v1/klines?symbol=${this.toTrading.symbol}&interval=${this.toTrading.interval}`);
-        fetch(`${proxyUrl}${apiurl}`).then(
+        // const apiurl = encodeURIComponent(`https://api.binance.com/api/v1/klines?symbol=${this.toTrading.symbol}&interval=${this.toTrading.interval}`);
+        fetch(`https://api.binance.com/api/v1/klines?symbol=${this.toTrading.symbol}&interval=${this.toTrading.interval}`).then(
+          
           function (response) {
             if (response.status !== 200) {
               console.log('Looks like there was a problem. Status Code: ' + response.status);
               return;
             }
+            // console.log('res',response)
             response.json().then(function (data) {
+              // console.log('data',data)
               this.chartData = data.map((val) => {
                 return {
                   "date": new Date(val[0]),
@@ -99,12 +108,12 @@
               else {
                 this.showChart();
               }
-              // this.chartLoading = false;
+              this.overlay = false
               this.zoomChart();
             }.bind(this));
           }.bind(this)
         ).catch(function (err) {
-          // this.chartLoading = false;
+          this.overlay = false
           console.log('Fetch Error :-S', err);
         });
       },

@@ -34,7 +34,7 @@
       <v-card flat class="user-id">
         <v-simple-table>
           <tbody>
-            <tr>
+            <tr >
               <td>Recharge Record</td>
             </tr>
             <tr>
@@ -155,7 +155,10 @@ export default {
 
     BankCard(){
       this.$router.push('/BankCard')
-    }
+    },
+    // RechargeHistory(){
+    //   this.$router.push("/RechargeHistory");
+    // }
     },
 }
 </script>
@@ -198,9 +201,34 @@ p {
   z-index: 999;
 }
 
-@media (max-width: 600px) {
-  .footer {
-    padding: 10px;
+
+@media screen and (max-width: 767px) {
+  /* Styles for phone devices */
+  .bg {
+    /* Adjust the styles for the background container */
+    padding: 20px;
   }
+
+  .user-id {
+    /* Adjust the styles for the user ID container */
+    margin-top: 20px;
+  }
+
+ 
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  /* Styles for tablet devices */
+  .bg {
+    /* Adjust the styles for the background container */
+    padding: 40px;
+  }
+
+  .user-id {
+    /* Adjust the styles for the user ID container */
+    margin-top: 40px;
+  }
+
+  
 }
 </style>

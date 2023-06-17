@@ -11,6 +11,8 @@ use App\Http\Controllers\TradeOrderController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MarketTradeController;
 use App\Http\Controllers\DepositController;
+use App\Http\Controllers\BankCardController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +51,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/account/store', [AccountController::class, 'store']);
     Route::post('/account/update/{account}', [AccountController::class, 'update']);
 
+    Route::get('/bankcards', [BankCardController::class, 'index']);
+    Route::post('/bankcard/store', [BankCardController::class, 'store']);
+    Route::post('/bankcard/update/{account}', [BankCardController::class, 'update']);
 
     Route::get('/market', [MarketTradeController::class, 'index']);
     Route::post('/market/store', [MarketTradeController::class, 'store']);
@@ -71,5 +76,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/RechargeDetails/update2', [DepositController::class, 'update2']);
     Route::get('/RechargeDetailsAdmin', [DepositController::class, 'RechargeDetailsAdmin']);
     Route::post('/CancelOrderAdmin/update', [DepositController::class, 'CancelOrderAdmin']);
+    Route::get('/GetHistory/{id}', [DepositController::class, 'GetHistory']);
 
 });

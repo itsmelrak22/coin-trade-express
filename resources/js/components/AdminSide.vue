@@ -34,12 +34,13 @@
                     <td style="font-size:12px">{{ tradeorders.user_account }}</td>
                     <td style="font-size:12px">{{ tradeorders.contract }}</td>
                     <td style="font-size:12px">
-           <v-icon small>mdi-arrow-up</v-icon> <span>{{ tradeorders.direction == 'sell' ? 'Down' : 'Up' }}</span>
-
-                        <v-chip outlined color="success" dense x-small  v-if="tradeorders.direction == 'sell'">
+            <span>{{ tradeorders.type == 'sell' ? 'Down' : 'Up' }}</span>
+           <!-- <v-icon small>mdi-arrow-down</v-icon> <span>{{ tradeorders.type == 'buy' ? 'Up' : 'Down' }}</span> -->
+                        <v-chip outlined color="success" dense x-small  v-if="tradeorders.type == 'sell'">
                             Set Up
                         </v-chip>
-                        <v-chip color="error" dense x-small outlined      v-else>
+                        
+                        <v-chip color="error" dense x-small outlined  v-else>
                             Set Down
                         </v-chip>
 
