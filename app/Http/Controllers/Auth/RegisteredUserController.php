@@ -33,6 +33,15 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
+
+        $agent = \DB::table('admins')
+                        ->where('invitation_code', $request->invitation_code)
+                        ->where('deleted_at', NULL)
+                        ->first();
+        if( !$agent ){
+            return [ "invalid_agent" => "Invalid invitation code, please check." ];
+        }
+        
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -42,9 +51,19 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'country' => $request->country,
             'password' => Hash::make($request->password),
         ]);
 
+        \DB::table('agent_clients')
+            ->insert([
+                "agent_id" => $agent->id,
+                "client_id" => $user->id,
+                "created_at" => new \DateTime,
+                "updated_at" => new \DateTime,
+            ]);
+
+        
         event(new Registered($user));
 
         Auth::login($user);

@@ -59,7 +59,7 @@
                         outlined
                         dense
                         name="password"
-                        :rules="rules.password"
+                        :rules="rules.required"
                       ></v-text-field>
 
                       <v-divider></v-divider>
@@ -161,8 +161,8 @@
                       <v-text-field
                       type="text"
                       label="Invitation Code"
-                      name="Incode"
-                      v-model="employee.InCode"
+                      name="invitation_code"
+                      v-model="employee.invitation_code"
                       prepend-icon="mdi-barcode"
                       required
                       readonly 
@@ -293,8 +293,8 @@ export default {
       },
 
       handleRegistration(){
-        this.disableBtn = true
         if(this.$refs.RegisterForm.validate()){
+          this.disableBtn = true
           const myForm = document.getElementById('RegisterForm');
           const formdata = new FormData(myForm);
 
@@ -306,13 +306,22 @@ export default {
                   headers: { "Content-Type": "multipart/form-data" },
               },
           })
-          .then(() => {
+          .then(( { data } ) => {
+            console.log(data)
+            if( data.invalid_agent ){
+              alert(data.invalid_agent);
+              this.disableBtn = false
+              return;
+            }
              this.handleLogin()
           })
           .catch(err =>{
             this.disableBtn = false
             console.log(err)
             alert('Something Went Wrong')
+          })
+          .finally( () =>{
+            this.disableBtn = false
           })
         }
       },
