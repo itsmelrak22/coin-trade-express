@@ -49,7 +49,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/accounts', [AccountController::class, 'index']);
     Route::post('/account/store', [AccountController::class, 'store']);
-    Route::post('/account/update/{account}', [AccountController::class, 'update']);
+Route::get('/getMarketTables/{symbolDisplayName}', [MarketTradeController::class, 'getMarketTables']);    Route::post('/account/update/{account}', [AccountController::class, 'update']);
 
     Route::get('/bankcards', [BankCardController::class, 'index']);
     Route::post('/bankcard/store', [BankCardController::class, 'store']);
@@ -77,5 +77,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/RechargeDetailsAdmin', [DepositController::class, 'RechargeDetailsAdmin']);
     Route::post('/CancelOrderAdmin/update', [DepositController::class, 'CancelOrderAdmin']);
     Route::get('/GetHistory/{id}', [DepositController::class, 'GetHistory']);
-
+    Route::get('/getMarketTables/{symbolDisplayName}', [MarketTradeController::class, 'getMarketTables']);
 });
