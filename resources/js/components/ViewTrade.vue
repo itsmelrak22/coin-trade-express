@@ -498,7 +498,7 @@ export default {
                 });
         },
         upbtn() {
-            this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "40") : (this.obj.discountResult = "30");
+            this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
             this.obj.userId = this.loggedInUser.id;
             this.obj.email = this.loggedInUser.email;
             this.obj.profit = this.loggedInUser.remember_token;
@@ -528,14 +528,14 @@ export default {
             })
             if(this.obj.recharge >= 100){
                  if(this.Account.Asset > this.obj.recharge ){
-                this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "40") : (this.obj.discountResult = "30");
+                    this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
                 this.obj.trading = "pending";
                 this.obj.T_id = `T${moment().format("YYYYMMDD")}-${this.GenerateTID(this.LastTID)}`
                 this.obj.order_time = moment().format("YYYY-MM-DD HH:mm:ss");
                 this.obj.complete_time = moment().format("YYYY-MM-DD HH:mm:ss");
                 this.obj.profit = this.obj.profit - this.obj.recharge;
                 
-                
+                console.log('thisOBJ',this.obj)
                 let d = moment().format("YYYY-MM-DD HH:mm:ss");
                 let a = d.substring(0, 14);
                 let b = parseFloat(d.substring(14, 16)) + 1;

@@ -64,7 +64,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/bankcards', [BankCardController::class, 'index']);
     Route::post('/bankcard/store', [BankCardController::class, 'store']);
-    Route::post('/bankcard/update/{account}', [BankCardController::class, 'update']);
+    Route::post('/bankcard/update', [BankCardController::class, 'update']);
+    Route::post('/bankcard/Delete', [BankCardController::class, 'Delete']);
 
 
     Route::get('/market', [MarketTradeController::class, 'index']);
