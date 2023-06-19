@@ -518,6 +518,8 @@ export default {
         },
 
         submitbtn() {
+            let total = parseInt(this.Account.Asset) - parseInt(this.obj.recharge)
+            console.log(total)
             // Alert
             var toastMixin = Swal.mixin({
                 toast: true,
@@ -535,32 +537,46 @@ export default {
             })
             if(this.obj.recharge >= 100){
                  if(this.Account.Asset > this.obj.recharge ){
-                    this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
-                this.obj.trading = "pending";
-                this.obj.T_id = `T${moment().format("YYYYMMDD")}-${this.GenerateTID(this.LastTID)}`
-                this.obj.order_time = moment().format("YYYY-MM-DD HH:mm:ss");
-                this.obj.complete_time = moment().format("YYYY-MM-DD HH:mm:ss");
-                this.obj.profit = this.obj.profit - this.obj.recharge;
-                
-                console.log('thisOBJ',this.obj)
-                let d = moment().format("YYYY-MM-DD HH:mm:ss");
-                let a = d.substring(0, 14);
-                let b = parseFloat(d.substring(14, 16)) + 1;
-                let c = d.substring(16, 19);
-                let combine = a + b + c;
-                this.obj.closing_time = moment().format(`${combine}`);
+                    if(100000000 > this.obj.recharge){
+                        this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
+                        this.obj.trading = "pending";
+                        this.obj.T_id = `T${moment().format("YYYYMMDD")}-${this.GenerateTID(this.LastTID)}`
+                        this.obj.order_time = moment().format("YYYY-MM-DD HH:mm:ss");
+                        this.obj.complete_time = moment().format("YYYY-MM-DD HH:mm:ss");
+                        this.obj.profit = this.obj.profit - this.obj.recharge;
+                        
+                        console.log('thisOBJ',this.obj)
+                        let d = moment().format("YYYY-MM-DD HH:mm:ss");
+                        let a = d.substring(0, 14);
+                        let b = parseFloat(d.substring(14, 16)) + 1;
+                        let c = d.substring(16, 19);
+                        let combine = a + b + c;
+                        this.obj.closing_time = moment().format(`${combine}`);
 
-                axios.post("api/Dashboard/store", this.obj)
-                    .then((res) => {
-                        this.obj = {};
-                        this.sheet = false;
+                        axios.post("api/Dashboard/store", this.obj)
+                            .then((res) => {
+                                this.obj = {};
+                                this.sheet = false;
+                                toastMixin.fire({
+                                    icon: 'success',
+                                    title : 'Successfully',
+                                    animation:true,
+                                    text: 'Process Completed',
+                                })
+                                // axios.post(`/api/clientprocess`,total).then((res)=>{
+                                //     // alert('success')
+                                // })
+                            
+                            });
+                    }else{
                         toastMixin.fire({
-                            icon: 'success',
-                            title : 'Successfully',
-                            animation:true,
-                            text: 'Process Completed',
+                        icon: 'error',
+                        title : 'Oppsss....',
+                        animation:true,
+                        text: 'The Maximum Bet is 100,000.000',
                         })
-                    });
+                    }
+               
                 }else{
                     toastMixin.fire({
                         icon: 'error',
@@ -577,9 +593,6 @@ export default {
                     text: 'Minimun Purchese Limit is 100',
                 })
             }
-
-
-          
            
         },
 

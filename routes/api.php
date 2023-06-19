@@ -27,11 +27,11 @@ use App\Http\Controllers\BankCardController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
-// });
+// });upda
 
 
 
-Route::middleware('auth:api')->group(function () {
+    Route::middleware('auth:api')->group(function () {
     Route::get('/master/permissions', [PermissionController::class, 'index']);
     
     Route::get('/master/roles', [RoleController::class, 'index']);
@@ -40,6 +40,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/user/update/{user}', [UserController::class, 'update']);
     Route::post('/user/update2/{user}', [UserController::class, 'update2']);
     Route::post('/adminprocess', [UserController::class, 'adminprocess']);
+    Route::post('/clientprocess', [UserController::class, 'clientprocess']);
 
     Route::post('/Dashboard/store', [TradeOrderController::class, 'store']);
     Route::get('/TradeOrders', [TradeOrderController::class, 'index']);
@@ -52,6 +53,7 @@ Route::middleware('auth:api')->group(function () {
 Route::get('/getMarketTables/{symbolDisplayName}', [MarketTradeController::class, 'getMarketTables']);    Route::post('/account/update/{account}', [AccountController::class, 'update']);
 
     Route::get('/bankcards', [BankCardController::class, 'index']);
+    Route::get('/basicinfo/{name}', [BankCardController::class, 'basicinfo']);
     Route::post('/bankcard/store', [BankCardController::class, 'store']);
     Route::post('/bankcard/update', [BankCardController::class, 'update']);
     Route::post('/bankcard/Delete', [BankCardController::class, 'Delete']);
