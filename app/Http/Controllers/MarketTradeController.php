@@ -77,13 +77,12 @@ class MarketTradeController extends Controller
      * @param  \App\Models\MarketTrade  $marketTrade
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+ public function update(Request $request)
  {
     $marketRows = MarketTrade::all();
 
 
-//update na pala to? bat ganun? hahaha 
- //need k
+
     if( $request->SymbolName == 'BTCUSDT'){
        $countLength = 1;
        $maxRows = 15;
@@ -100,8 +99,7 @@ class MarketTradeController extends Controller
         $count = 29;    
     }
     else if( $request->SymbolName == 'LTCUSDT'){
-  
-      $countLength = 45 ;
+       $countLength = 45 ;
        $maxRows = 60;
        $count = 44;    
     }
@@ -196,5 +194,10 @@ class MarketTradeController extends Controller
     public function destroy(MarketTrade $marketTrade)
     {
         //
+    }
+    public function getMarketTables($symbolDisplayName )
+    {
+        $marketTrades = MarketTrade::where('No', $symbolDisplayName)->get();
+        return response()->json($marketTrades);
     }
 }
