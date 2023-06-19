@@ -14,6 +14,7 @@
                     <v-card-text>
                         <span>Name:</span>
                         <v-text-field 
+                        @keyup="GetInfo()"
                         v-model="obj.name"
                         outlined
                         dense
@@ -31,9 +32,9 @@
                         <v-select 
                         outlined
                         dense
-                        item-text="bankName"
-                        item-value="bankName"
-                        :items="bankdeposit_arr"
+                        item-text="bankdeposit"
+                        item-value="bankdeposit"
+                        :items="obj"
                         v-model="obj.bankdeposit"
                         ></v-select> 
 
@@ -54,6 +55,14 @@
                         ></v-text-field>
 
                         <span>IFSC Code:</span>
+                        <v-text-field
+                        v-model="obj.ifsc"
+                        outlined
+                        dense
+                        readonly
+                        ></v-text-field>
+
+                        <span>Amount Withdraw:</span>
                         <v-text-field
                         v-model="obj.ifsc"
                         outlined
@@ -88,7 +97,7 @@ export default {
         ],
         BankInfo: {},
         Account: {},
-        obj:{},
+        obj:[],
         totalmoney: null,
         paymentmethod: null,
         LastWithdrawalID :{},
@@ -98,6 +107,7 @@ export default {
     created(){
         this.getBankInfo()
         this.GetUser()
+        // this.GetInfo()
         // this.loadLastID()
     },
 
@@ -164,8 +174,8 @@ export default {
                 if( res.data.UserID == this.loggedInUser.id){
                     this.BankInfo = res.data
                     console.log('bankinfo',this.BankInfo)
-                    this.paymentmethod = this.BankInfo[0].bankdeposit
-                    this.obj = this.BankInfo[0]
+                    // this.paymentmethod = this.BankInfo[0].bankdeposit
+                    this.obj = this.BankInfo
                     console.log('obj',this.obj)
                 
                 }else if(res.data.length == 0 ){
@@ -181,8 +191,8 @@ export default {
                 }else if(res.data[0].UserID == this.loggedInUser.id ){
                     this.BankInfo = res.data
                     console.log('bankinfo',this.BankInfo)
-                    this.paymentmethod = this.BankInfo[0].bankdeposit
-                    this.obj = this.BankInfo[0]
+                    // this.paymentmethod = this.BankInfo[0].bankdeposit
+                    this.obj = this.BankInfo
                     console.log('obj',this.obj)
                 }
             // }
@@ -190,7 +200,7 @@ export default {
     },
 
     GetUser(){
-            axios.get(`/api/AccountInfo`).then((res) => {
+            axios.get(`api/AccountInfo`).then((res) => {
             for(let i = 0; i < res.data.length; i++){
                 if(this.loggedInUser.id == res.data[i].id){
                 //   console.log('user',res.data[i].Asset)
@@ -230,7 +240,19 @@ export default {
         //             }
         //         })
         // }, //end 
-
+    GetInfo(){
+        
+        if(this.obj.name.length){
+            axios.get(`api/basicinfo/${this.obj.name}`).then((res)=>{
+                console.log('name',this.obj.name)
+                if(res.data[0]){
+                    console.log('getinfo',res.data)
+                    this.obj = {...res.data[0]}
+                }
+            })
+        }
+       
+    },
 
     },
 }

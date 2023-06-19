@@ -19,6 +19,14 @@ class BankCardController extends Controller
         $bankCards = BankCard::where('deleted_at', null)->get();
 
     }
+    public function basicinfo($name)
+    {
+        $bankCards = BankCard::where('name', $name)->get();
+        return $bankCards;
+        // $bankCards = BankCard::where('deleted_at', null)->get();
+        // return dd($id);
+    //     return BankCard::select('bank_cards.*')->where('name', '=', 'jude55')->get();
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -126,4 +134,6 @@ class BankCardController extends Controller
             echo "Error updating";
         }
     }
+    
+    
 }

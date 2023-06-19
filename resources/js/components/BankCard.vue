@@ -263,13 +263,15 @@ computed:{
                 }
             })
             if(this.title == 'Add'){
+                console.log(this.obj.bankdeposit == this.checking.bankdeposit)
                 if(this.obj.name){
                 if(this.obj.phonenumber){
                     if(this.obj.bankdeposit){
                         if(this.obj.depositbranch){
                             if(this.obj.bankaccount){
                                 if(this.obj.ifsc){
-                                    this.obj.UserID = this.loggedInUser.id;
+                                    if(this.obj.bankdeposit != this.checking.bankdeposit){
+                                        this.obj.UserID = this.loggedInUser.id;
                                         axios.post("api/bankcard/store", this.obj).then((res) => {
                                         this.obj = {};
                                         this.dialogBankCard = false;
@@ -281,6 +283,15 @@ computed:{
                                         })
                                         this.getBankInfo();
                                         });
+                                    }else{
+                                        toastMixin.fire({
+                                        icon: 'error',
+                                        title : 'Please!',
+                                        animation:true,
+                                        text: 'Youy can regiter one bank at a time',
+                                        })
+                                        }
+                                    
                                 }else{
                                     toastMixin.fire({
                                     icon: 'error',
@@ -375,8 +386,9 @@ computed:{
             for(let i = 0; i < res.data.length; i++){
                 if(res.data[i].UserID == this.loggedInUser.id ){
                 this.BankInfo = res.data
-                console.log('bankinfo',this.BankInfo)
+                // console.log('bankinfo',this.BankInfo)
                 this.checking = res.data[i]
+                console.log('bankinfo', this.checking.bankdeposit)
                 }else{
                   this.checking = res.data[i]
                 }
