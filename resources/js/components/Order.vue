@@ -87,8 +87,8 @@
                             ></v-col>
                             </v-row>
                             <v-row>
-                           
-                            <v-col class="text-right">{{item.counting <= 0 ? 'closed':item.counting}}</v-col>
+                                
+                            <v-col style="color:white" class="text-right">{{item.counting <= 0 ? 'closed':item.counting}}</v-col>
                             </v-row>
                         </v-card-text>
                     </v-card>
@@ -165,16 +165,19 @@ this.getTradeOrder();
                     for(let i = 0; i < res.data.length; i++){
                         if(res.data[i].User_code == this.loggedInUser.id){
                             this.gettradeorders = res.data
+                            console.log(this.gettradeorders)
                                 this.gettradeorders.forEach((item,index) => {
                                     let daycut = moment().format("YYYY-MM-DD HH:mm:ss");
                                     let string = daycut;
                                     let targetMoment1 = moment(`${string}`);
                                     let targetMoment2 = moment(`${item.closing_time}`);
                                     let diffInSeconds = targetMoment2.diff(targetMoment1, "seconds");
+                                    
                                     item.counting = diffInSeconds +1;
+                                    
                                     // let interval = setInterval(() => {
                                     if ( item.counting == 0) {
-                                    console.log('1')
+                                        console.log('1')
                                         clearInterval(interval);
                                         this.updateTradingValue(item);
                                     }else if(item.counting <= 0 && item.trading === 'pending'){
@@ -190,7 +193,7 @@ this.getTradeOrder();
         },2000 );
             },
             updateTradingValue(item) {
-            
+                console.log('item',item)
                 item.result = parseFloat(item.quantity) + parseFloat(item.profit);
                 console.log('item dto sa order',item)
                 axios.post(`api/calculateCount`, item).then((response) => {

@@ -9,31 +9,58 @@
                         <b>Withdraw</b>
                         </v-card-title>
                 </v-card>
-                <center>My Credit Score: 100.00</center>
+                <center>My Credit Score: {{totalmoney}}</center>
                 <v-card flat >
                     <v-card-text>
-                        <span>Extractable Quantity:</span>
+                        <span>Name:</span>
                         <v-text-field 
-                        v-model="totalmoney"
+                        v-model="obj.name"
                         outlined
                         dense
                         ></v-text-field>
 
-                        <span>Please Select a BankCard:</span>
+                        <span>Phone Number:</span>
                         <v-text-field
-                        v-model="paymentmethod" 
+                        v-model="obj.phonenumber" 
                         outlined
                         dense
                         readonly
                         ></v-text-field>
-                        <span>Amount of Coin Withdraw:</span>
-                        <v-text-field 
+
+                        <span>Bank of Deposit:</span>
+                        <v-select 
                         outlined
                         dense
-                        v-model="obj.amountwithdraw"
-                        hint="Fee 0.0000 National Legal Tender"
+                        item-text="bankName"
+                        item-value="bankName"
+                        :items="bankdeposit_arr"
+                        v-model="obj.bankdeposit"
+                        ></v-select> 
+
+                        <span>Bank Branch:</span>
+                        <v-text-field
+                        v-model="obj.depositbranch"
+                        outlined
+                        dense
+                        readonly
                         ></v-text-field>
-                        <span>Arived Ammount National Tender</span>
+
+                        <span>Bank Account:</span>
+                        <v-text-field
+                        v-model="obj.bankaccount"
+                        outlined
+                        dense
+                        readonly
+                        ></v-text-field>
+
+                        <span>IFSC Code:</span>
+                        <v-text-field
+                        v-model="obj.ifsc"
+                        outlined
+                        dense
+                        readonly
+                        ></v-text-field>
+                        
                         <v-card-actions>
                             <v-btn @click="SAVE()" color="primary" block>
                                 WITHDRAWAL
@@ -50,14 +77,14 @@ import moment from "moment";
 import Swal from "sweetalert2";
 export default {
     data:()=>({
-        bank : [
-            'UNITED OVERSEAS BANK LTD',
-            'ANEXT BANK PTE. LTD.',
-            'AUSTRALIA AND NEW ZEALAND BANKING GROUP LIMITED',
-            'BANK OF CHINA LIMITED',
-            'BNP PARIBAS',
-            'CIMB BANK BERHAD',
-            'CITIBANK NA SINGAPORE'
+        bankdeposit_arr:[
+            {bankName:'UNITED OVERSEAS BANK LTD'},
+            {bankName:'ANEXT BANK PTE. LTD.'},
+            {bankName:'AUSTRALIA AND NEW ZEALAND BANKING GROUP LIMITED'},
+            {bankName:'BANK OF CHINA LIMITED'},
+            {bankName:'BNP PARIBAS'},
+            {bankName:'CIMB BANK BERHAD'},
+            {bankName:'CITIBANK NA SINGAPORE'},
         ],
         BankInfo: {},
         Account: {},
@@ -99,7 +126,7 @@ export default {
                 icon: 'error',
                 title : 'Please!',
                 animation:true,
-                text: 'Please End your Game Before You Withdraw...',
+                text: 'Please Finish your Task Before you Withdraw...',
             })
             // if(this.totalmoney < this.obj.amountwithdraw){
             //     alert('masmalaki ung withdraw mo')
@@ -131,9 +158,17 @@ export default {
                 }
             })
         axios.get(`api/bankcards`).then((res)=>{
-            console.log(res.data.length == 0)
-            for(let i = 0; i < res.data.length; i++){
-                if(res.data.length == 0){
+            console.log(res.data)
+            // for(let i = 0; i < res.data.length; i++){
+                
+                if( res.data.UserID == this.loggedInUser.id){
+                    this.BankInfo = res.data
+                    console.log('bankinfo',this.BankInfo)
+                    this.paymentmethod = this.BankInfo[0].bankdeposit
+                    this.obj = this.BankInfo[0]
+                    console.log('obj',this.obj)
+                
+                }else if(res.data.length == 0 ){
                     toastMixin.fire({
                         icon: 'error',
                         title : 'Warning!',
@@ -141,14 +176,16 @@ export default {
                         text: 'No Bank Account Registered',
                     })
                     this.$router.push('/BankCard')
-                
-                }else if(res.data[i].UserID == this.loggedInUser.id ){
+                   
+                    // console.log(this.obj.paymentmethod)
+                }else if(res.data[0].UserID == this.loggedInUser.id ){
                     this.BankInfo = res.data
                     console.log('bankinfo',this.BankInfo)
-                    this.paymentmethod = this.BankInfo[i].bankdeposit
-                    // console.log(this.obj.paymentmethod)
+                    this.paymentmethod = this.BankInfo[0].bankdeposit
+                    this.obj = this.BankInfo[0]
+                    console.log('obj',this.obj)
                 }
-            }
+            // }
         })
     },
 

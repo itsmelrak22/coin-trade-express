@@ -16,6 +16,7 @@ class BankCardController extends Controller
     {
         //
         return BankCard::all();
+        $bankCards = BankCard::where('deleted_at', null)->get();
 
     }
 
@@ -79,9 +80,28 @@ class BankCardController extends Controller
      * @param  \App\Models\BankCard  $bankCard
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BankCard $bankCard)
+    public function update(Request $request)
     {
-        //
+        // return dd($request);
+        try{
+            BankCard::where('name', $request->name)
+            ->where('bankaccount' , $request->bankaccount)
+                    // ->where('bankdeposit', $request->bankdeposit)
+                    // ->where('depositbranch', $request->depositbranch)
+                    
+            ->update([
+                'UserID' => $request->UserID,
+                'name' => $request->name,
+                'phonenumber' => $request->phonenumber,
+                'bankdeposit' => $request->bankdeposit,
+                'depositbranch' => $request->depositbranch,
+                'bankaccount' => $request->bankaccount,
+                'ifsc' => $request->ifsc,
+            ]);
+        return response()->json('The post successfully Updated');
+        }catch(Exception $e){
+            echo "Error updating";
+        }
     }
 
     /**
@@ -90,8 +110,20 @@ class BankCardController extends Controller
      * @param  \App\Models\BankCard  $bankCard
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BankCard $bankCard)
+    public function Delete(Request $request)
     {
-        //
+        // return dd(date('Y-m-d H:i:s'));
+        try{
+            BankCard::where('name', $request->name)
+            ->where('bankaccount' , $request->bankaccount)
+                   
+                    
+            ->update([
+                'deleted_at' => date('Y-m-d H:i:s')
+            ]);
+        return response()->json('The post successfully Deleted');
+        }catch(Exception $e){
+            echo "Error updating";
+        }
     }
 }

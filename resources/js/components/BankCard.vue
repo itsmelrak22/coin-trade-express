@@ -6,8 +6,8 @@
             <!-- Asset Center -->
             <!-- <h1> {{ checking.UserID }}  </h1> 
             <h1> log{{loggedInUser.id }}</h1>   -->
-            
-            <v-card flat class="user-id" v-if="this.checking.UserID != this.loggedInUser.id">
+            <!-- v-if="this.checking.UserID != this.loggedInUser.id" -->
+            <v-card flat class="user-id" >
                 <v-list dense>
                     <v-list-item>
                         <v-list-item-content>
@@ -37,6 +37,12 @@
                 <v-list-item-content>
                     <v-card >
                         <v-card-text>
+                            <v-row>
+                                <v-col>
+                                    <v-btn plain color="success" @click="Handle_Edit(item)"><v-icon>mdi-pencil</v-icon></v-btn>
+                                    <v-btn plain color="error" @click="Handle_Delete(item)"><v-icon>mdi-trash-can</v-icon></v-btn>
+                                    </v-col>
+                            </v-row>
                             <v-row>
                                 <v-col><span>Name</span><br/></v-col>
                                 <v-col><span>Bank Name</span><br/></v-col>
@@ -83,7 +89,7 @@
                         >
                             <v-icon>mdi-arrow-left</v-icon>
                         </v-btn>
-                        <h3>Go bind nowBank card</h3>
+                        <h3>Go Back</h3>
                     </v-toolbar>
                     <v-card-text style="background-color: #FFFFFF">
                     <v-row  no-gutters class="ma-3">
@@ -102,7 +108,7 @@
                   <v-card-text style="background-color: #FFFFFF">
        
                     <v-row  no-gutters  class="ma-3">
-                        <span style="font-size: 11px;font-weight:bold">bank of deposit </span>
+                        <span style="font-size: 11px;font-weight:bold">Bank of Deposit </span>
                     </v-row>
                     <v-row  no-gutters class="ma-3">
                         <v-select   :items="bankdeposit_arr"
@@ -110,7 +116,7 @@
                         item-value="bankName" color="black" class="custom-text-field" v-model="obj.bankdeposit" dense hide-details> </v-select>
                     </v-row>
                     <v-row  no-gutters  class="ma-3">
-                        <span style="font-size: 11px;font-weight:bold">Please enter the bank of deposit branch</span>
+                        <span style="font-size: 11px;font-weight:bold">Please enter the Bank of Deposit Branch</span>
                     </v-row>
                     <v-row  no-gutters class="ma-3">
                         <v-text-field color="black" v-model="obj.depositbranch" dense hide-details> </v-text-field>
@@ -174,12 +180,21 @@ import Swal from "sweetalert2";
 export default {
     data: () => ({
         dialogBankCard: false,
-        bankdeposit_arr:[{bankName:'ANEXT BANK PTE. LTD.'}],
+        bankdeposit_arr:[
+            {bankName:'UNITED OVERSEAS BANK LTD'},
+            {bankName:'ANEXT BANK PTE. LTD.'},
+            {bankName:'AUSTRALIA AND NEW ZEALAND BANKING GROUP LIMITED'},
+            {bankName:'BANK OF CHINA LIMITED'},
+            {bankName:'BNP PARIBAS'},
+            {bankName:'CIMB BANK BERHAD'},
+            {bankName:'CITIBANK NA SINGAPORE'},
+        ],
         obj:{},
         BankInfo:{},
         checking:{},
         checking1:{},
         BankInfo: [],
+        title: 'Add',
         
     csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
 
@@ -226,6 +241,7 @@ computed:{
             //             text: 'Please End your Game Before You Withdraw...',
             //         })
             this.dialogBankCard = true;
+            this.title = 'Add'
         },
         returnBankCard(val) {
            
@@ -246,8 +262,8 @@ computed:{
                 toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
             })
-            
-            if(this.obj.name){
+            if(this.title == 'Add'){
+                if(this.obj.name){
                 if(this.obj.phonenumber){
                     if(this.obj.bankdeposit){
                         if(this.obj.depositbranch){
@@ -315,31 +331,47 @@ computed:{
                     text: 'Please Input your name!',
                 })
             }
+            }else if(this.title == 'Edit'){
+                // console.log('pasok')
+                this.obj.UserID = this.loggedInUser.id;
+                console.log('pasok',this.obj)
+                axios.post(`api/bankcard/update`, this.obj).then((res) => {
+                this.obj = {};
+                this.dialogBankCard = false;
+                toastMixin.fire({
+                    icon: 'success',
+                    title : 'Susscessful!',
+                    animation:true,
+                    text: 'Successfully Updated',
+                })
+                this.getBankInfo();
+                });
+            }
+            
            
         },
         GotoRecharge(){
-      this.$router.push("/DepositView");
-    },
-    GotoWithdrawal(){
-      this.$router.push("/Withdrawal");
-    },
-    Home(){
-      this.$router.push('/')
-    },
-    Center(){
-      this.$router.push('/AccountInfo')
-    },
-    Order(){
-      this.$router.push('/Order')
-    },
-    BankCard(){
-    this.$router.push("/BankCard");
-
-      },
+        this.$router.push("/DepositView");
+        },
+        GotoWithdrawal(){
+        this.$router.push("/Withdrawal");
+        },
+        Home(){
+        this.$router.push('/')
+        },
+        Center(){
+        this.$router.push('/AccountInfo')
+        },
+        Order(){
+        this.$router.push('/Order')
+        },
+        BankCard(){
+        this.$router.push("/BankCard");
+        },
 
     getBankInfo(){
         axios.get(`api/bankcards`).then((res)=>{
-            console.log(res.data[0].UserID)
+            // console.log(res.data[0].UserID)
             for(let i = 0; i < res.data.length; i++){
                 if(res.data[i].UserID == this.loggedInUser.id ){
                 this.BankInfo = res.data
@@ -350,6 +382,45 @@ computed:{
                 }
             }
         })
+    },
+
+    Handle_Edit(item){
+        console.log(item)
+        this.obj = {...item}
+        this.dialogBankCard = true;
+        this.title = "Edit"
+
+    },
+
+    Handle_Delete(item){
+        var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation : false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar : true,
+                dibOpen : (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+        item.UserID = this.loggedInUser.id;
+                console.log('pasok',item)
+                axios.post(`api/bankcard/Delete`, item).then((res) => {
+                this.obj = {};
+                this.dialogBankCard = false;
+                toastMixin.fire({
+                    icon: 'success',
+                    title : 'Susscessful!',
+                    animation:true,
+                    text: 'Successfully Deleted',
+                })
+                this.getBankInfo();
+                location.reload();
+                });
     }
     },
 };
