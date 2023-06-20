@@ -43,7 +43,7 @@ use App\Http\Controllers\BankCardController;
     Route::post('/clientprocess', [UserController::class, 'clientprocess']);
 
     Route::post('/Dashboard/store', [TradeOrderController::class, 'store']);
-    Route::get('/TradeOrders', [TradeOrderController::class, 'index']);
+    Route::get('/TradeOrders/{id}', [TradeOrderController::class, 'index']);
     Route::put('/Dashboard/update', [TradeOrderController::class, 'update']);
     Route::get('/GetTID', [TradeOrderController::class, 'GetTID']);
 
@@ -52,7 +52,7 @@ use App\Http\Controllers\BankCardController;
     Route::post('/account/store', [AccountController::class, 'store']);
 Route::get('/getMarketTables/{symbolDisplayName}', [MarketTradeController::class, 'getMarketTables']);    Route::post('/account/update/{account}', [AccountController::class, 'update']);
 
-    Route::get('/bankcards', [BankCardController::class, 'index']);
+Route::get('/bankcards/{id}', [BankCardController::class, 'index']);
     Route::get('/basicinfo/{name}', [BankCardController::class, 'basicinfo']);
     Route::post('/bankcard/store', [BankCardController::class, 'store']);
     Route::post('/bankcard/update', [BankCardController::class, 'update']);
