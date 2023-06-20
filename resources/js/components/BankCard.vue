@@ -381,7 +381,7 @@ computed:{
         },
 
     getBankInfo(){
-        axios.get(`api/bankcards`).then((res)=>{
+        axios.get(`api/bankcards/${this.loggedInUser.id}`).then((res)=>{
             // console.log(res.data[0].UserID)
             for(let i = 0; i < res.data.length; i++){
                 if(res.data[i].UserID == this.loggedInUser.id ){

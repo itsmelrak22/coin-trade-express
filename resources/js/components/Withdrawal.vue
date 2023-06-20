@@ -13,8 +13,7 @@
                 <v-card flat >
                     <v-card-text>
                         <span>Name:</span>
-                        <v-text-field 
-                        @keyup="GetInfo()"
+                        <v-text-field @keyup="GetInfo()"
                         v-model="obj.name"
                         outlined
                         dense
@@ -30,6 +29,7 @@
 
                         <span>Bank of Deposit:</span>
                         <v-select 
+                        @change="GetInfo()"
                         outlined
                         dense
                         item-text="bankdeposit"
@@ -114,6 +114,7 @@ export default {
     methods:{
         backMain(){
             this.$router.push('/')
+            location.reload();
         },
 
         SAVE(){
@@ -167,7 +168,7 @@ export default {
                 toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
             })
-        axios.get(`api/bankcards`).then((res)=>{
+        axios.get(`api/bankcards/${this.loggedInUser.id}`).then((res)=>{
             console.log(res.data)
             // for(let i = 0; i < res.data.length; i++){
                 

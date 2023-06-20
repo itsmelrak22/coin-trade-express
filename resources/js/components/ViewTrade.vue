@@ -536,19 +536,30 @@ export default {
                 }
             })
             if(this.obj.recharge >= 100){
-                 if(this.Account.Asset > this.obj.recharge ){
+                 if(this.Account.Asset >= this.obj.recharge ){
                     if(100000000 > this.obj.recharge){
-                        this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
+                        this.discount == 0.6
+                    ? (this.obj.discountResult = "60")
+                    : this.discount == 0.4
+                    ? (this.obj.discountResult = "120")
+                    : (this.obj.discountResult = "180");
+                    console.log(this.obj.discountResult);
+                        // this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
                         this.obj.trading = "pending";
                         this.obj.T_id = `T${moment().format("YYYYMMDD")}-${this.GenerateTID(this.LastTID)}`
                         this.obj.order_time = moment().format("YYYY-MM-DD HH:mm:ss");
                         this.obj.complete_time = moment().format("YYYY-MM-DD HH:mm:ss");
                         this.obj.profit = this.obj.profit - this.obj.recharge;
                         
-                        console.log('thisOBJ',this.obj)
+                        let addingTime = null;
+                        this.discount == 0.6
+                        ? (addingTime = 1)
+                        : this.discount == 0.4
+                        ? (addingTime = 2)
+                        : (addingTime = 3);
                         let d = moment().format("YYYY-MM-DD HH:mm:ss");
                         let a = d.substring(0, 14);
-                        let b = parseFloat(d.substring(14, 16)) + 1;
+                        let b = parseFloat(d.substring(14, 16)) + addingTime;
                         let c = d.substring(16, 19);
                         let combine = a + b + c;
                         this.obj.closing_time = moment().format(`${combine}`);
