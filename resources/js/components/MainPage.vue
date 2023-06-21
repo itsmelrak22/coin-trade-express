@@ -5,7 +5,7 @@
         <div>
           <img style="width: 100%; border-radius: 5px; height: 100%;" src="https://omicomadswork.com/upload/1667207779419729.jpeg" alt="no img">
           <v-row no-gutters>
-            <v-col cols="12" md="2" style="margin-bottom: 20px;">
+            <v-col cols="4" md="2" style="margin-bottom: 20px;">
               <v-card height="150px" flat>
                 <v-card-title>
                   <b>{{ CoinDataBTC.name }}</b>
@@ -20,7 +20,7 @@
               </v-card>
             </v-col>
 
-            <v-col cols="12" md="2" style="margin-bottom: 20px;">
+            <v-col cols="4" md="2" style="margin-bottom: 20px;">
               <v-card height="150px" flat>
                 <v-card-title>
                   <b>{{ CoinDataETH.name }}</b>
@@ -36,7 +36,7 @@
               </v-card>
             </v-col>
 
-            <v-col cols="12" md="2" style="margin-bottom: 20px;">
+            <v-col cols="4" md="2" style="margin-bottom: 20px;">
               <v-card height="150px" flat>
                 <v-card-title>
                   <b>{{ CoinDataLTC.name }}</b>
@@ -58,13 +58,13 @@
               <img src="https://cryptobtc01.com/assets/images/icon_quick_recharge.22f59be.png" style="height: 40px;">
               <b> Quick recharge </b>
               <v-spacer></v-spacer>
-              <v-btn @click="GotoRecharge()" color="primary" width="60px">
+              <v-btn href="/DepositView" color="primary" width="60px">
                 <b>Go</b>
               </v-btn>
             </v-toolbar>
           </div>
           <br>
-          <v-simple-table flat style="min-width: 50px !important;">
+          <v-simple-table flat >
             <thead>
               <tr>
                 <th><center>Name</center></th>
@@ -183,13 +183,16 @@ export default {
 
       Home(){
             this.$router.push('/')
-         },
-         Center(){
-            this.$router.push('/AccountInfo')
-         },
-         Order(){
-            this.$router.push('/Order')
-         },
+            location.reload();
+      },
+      Center(){
+        this.$router.push('/AccountInfo')
+        location.reload();
+      },
+      Order(){
+        this.$router.push('/Order')
+        location.reload();
+      },
 
         GetTradeDetails(){
           // this.overlay = true;
@@ -220,9 +223,9 @@ export default {
         this.showDropDown = false;
         },
 
-        GotoRecharge(){
-          this.$router.push("/DepositView");
-        }
+        // GotoRecharge(){
+        //   this.$router.push("/DepositView");
+        // }
     },
 
     components: {
@@ -262,6 +265,27 @@ export default {
 @media (max-width: 600px) {
   .footer {
     padding: 10px;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .v-simple-table {
+    /* Default table width for larger screens */
+    width: 60%;
+  }
+}
+
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+  .v-simple-table {
+    /* Adjust table width for tablets */
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .v-simple-table {
+    /* Adjust table width for mobile devices */
+    width: 100%;
   }
 }
 </style>

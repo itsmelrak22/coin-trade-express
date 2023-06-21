@@ -40,10 +40,11 @@ use App\Http\Controllers\BankCardController;
     Route::post('/user/update/{user}', [UserController::class, 'update']);
     Route::post('/user/update2/{user}', [UserController::class, 'update2']);
     Route::post('/adminprocess', [UserController::class, 'adminprocess']);
-    Route::post('/clientprocess', [UserController::class, 'clientprocess']);
+    Route::post('/BetDeduction', [UserController::class, 'BetDeduction']);
 
     Route::post('/Dashboard/store', [TradeOrderController::class, 'store']);
-    Route::get('/TradeOrders/{id}', [TradeOrderController::class, 'index']);
+    Route::get('/TradeOrders', [TradeOrderController::class, 'index']);
+    Route::get('/TradeOrders/{id}', [TradeOrderController::class, 'index2']);
     Route::put('/Dashboard/update', [TradeOrderController::class, 'update']);
     Route::get('/GetTID', [TradeOrderController::class, 'GetTID']);
 

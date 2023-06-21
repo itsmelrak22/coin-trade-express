@@ -12,11 +12,23 @@
                 <center>My Credit Score: {{totalmoney}}</center>
                 <v-card flat >
                     <v-card-text>
+                        <span>Bank of Deposit:</span>
+                        <v-autocomplete 
+                        clearable
+                        @change="GetInfo()"
+                        outlined
+                        dense
+                        item-text="bankdeposit"
+                        :items="arraybank"
+                        v-model="obj.bankdeposit"
+                        ></v-autocomplete> 
+
                         <span>Name:</span>
-                        <v-text-field @keyup="GetInfo()"
+                        <v-text-field 
                         v-model="obj.name"
                         outlined
                         dense
+                        disabled
                         ></v-text-field>
 
                         <span>Phone Number:</span>
@@ -24,34 +36,22 @@
                         v-model="obj.phonenumber" 
                         outlined
                         dense
-                        readonly
+                        disabled
                         ></v-text-field>
-
-                        <span>Bank of Deposit:</span>
-                        <v-select 
-                        @change="GetInfo()"
-                        outlined
-                        dense
-                        item-text="bankdeposit"
-                        item-value="bankdeposit"
-                        :items="obj"
-                        v-model="obj.bankdeposit"
-                        ></v-select> 
-
-                        <span>Bank Branch:</span>
+                        <!-- <span>Bank Branch:</span>
                         <v-text-field
                         v-model="obj.depositbranch"
                         outlined
                         dense
                         readonly
-                        ></v-text-field>
+                        ></v-text-field> -->
 
                         <span>Bank Account:</span>
                         <v-text-field
                         v-model="obj.bankaccount"
                         outlined
                         dense
-                        readonly
+                        disabled
                         ></v-text-field>
 
                         <span>IFSC Code:</span>
@@ -59,15 +59,14 @@
                         v-model="obj.ifsc"
                         outlined
                         dense
-                        readonly
+                        disabled
                         ></v-text-field>
 
                         <span>Amount Withdraw:</span>
                         <v-text-field
-                        v-model="obj.ifsc"
+                        
                         outlined
                         dense
-                        readonly
                         ></v-text-field>
                         
                         <v-card-actions>
@@ -97,11 +96,13 @@ export default {
         ],
         BankInfo: {},
         Account: {},
-        obj:[],
+        obj:{},
+        arraybank:[],
         totalmoney: null,
         paymentmethod: null,
         LastWithdrawalID :{},
         WithdrawIDArr:[],
+        bankdeposit: undefined,
     }),
 
     created(){
@@ -169,34 +170,19 @@ export default {
                 }
             })
         axios.get(`api/bankcards/${this.loggedInUser.id}`).then((res)=>{
-            console.log(res.data)
-            // for(let i = 0; i < res.data.length; i++){
-                
-                if( res.data.UserID == this.loggedInUser.id){
-                    this.BankInfo = res.data
-                    console.log('bankinfo',this.BankInfo)
-                    // this.paymentmethod = this.BankInfo[0].bankdeposit
-                    this.obj = this.BankInfo
-                    console.log('obj',this.obj)
-                
-                }else if(res.data.length == 0 ){
-                    toastMixin.fire({
-                        icon: 'error',
-                        title : 'Warning!',
-                        animation:true,
-                        text: 'No Bank Account Registered',
-                    })
-                    this.$router.push('/BankCard')
-                   
-                    // console.log(this.obj.paymentmethod)
-                }else if(res.data[0].UserID == this.loggedInUser.id ){
-                    this.BankInfo = res.data
-                    console.log('bankinfo',this.BankInfo)
-                    // this.paymentmethod = this.BankInfo[0].bankdeposit
-                    this.obj = this.BankInfo
-                    console.log('obj',this.obj)
+            
+            this.arraybank = res.data
+            console.log('bankcard', res.data.length)
+            if(res.data.length == 0){
+                toastMixin.fire({
+                    icon: 'error',
+                    title : 'Warning!',
+                    animation:true,
+                    text: 'No Bank Account Registered',
+                })
+                this.$router.push('/BankCard')
                 }
-            // }
+           
         })
     },
 
@@ -240,15 +226,43 @@ export default {
         //                 console.log('Employee',this.LastWithdrawalID)
         //             }
         //         })
+        // if( res.data.UserID == this.loggedInUser.id){
+        //             this.BankInfo = res.data
+        //             // console.log('bankinfo',this.BankInfo)
+        //             // this.paymentmethod = this.BankInfo[0].bankdeposit
+        //             this.obj = this.BankInfo
+        //             // console.log('obj',this.obj)
+                
+        //         }else if(res.data.length == 0 ){
+        //             toastMixin.fire({
+        //                 icon: 'error',
+        //                 title : 'Warning!',
+        //                 animation:true,
+        //                 text: 'No Bank Account Registered',
+        //             })
+        //             this.$router.push('/BankCard')
+                   
+        //             // console.log(this.obj.paymentmethod)
+        //         }else if(res.data[0].UserID == this.loggedInUser.id ){
+        //             this.BankInfo = res.data
+        //             console.log('bankinfo',this.BankInfo)
+        //             // this.paymentmethod = this.BankInfo[0].bankdeposit
+        //             this.obj = this.BankInfo
+        //             console.log('obj',this.obj)
+        //         }
+            // }
         // }, //end 
     GetInfo(){
-        
-        if(this.obj.name.length){
-            axios.get(`api/basicinfo/${this.obj.name}`).then((res)=>{
-                console.log('name',this.obj.name)
+            console.log('name',this.obj.bankdeposit)
+        if(this.obj.bankdeposit == null ){
+            this.obj = {}
+        }else{
+            
+            axios.get(`api/basicinfo/${this.obj.bankdeposit}`).then((res)=>{
                 if(res.data[0]){
-                    console.log('getinfo',res.data)
+                    console.log('dto',res.data[0])
                     this.obj = {...res.data[0]}
+                    // this.arraybank = res.data
                 }
             })
         }

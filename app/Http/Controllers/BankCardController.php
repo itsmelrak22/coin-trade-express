@@ -12,16 +12,19 @@ class BankCardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
+        // return dd($id);
         //
-        return BankCard::all();
-        $bankCards = BankCard::where('deleted_at', null)->get();
+        // return BankCard::all();
+        $bankCards = BankCard::where('deleted_at', null)
+                    ->where('UserID', $id)->get();
+        return $bankCards;
 
     }
     public function basicinfo($name)
     {
-        $bankCards = BankCard::where('name', $name)->get();
+        $bankCards = BankCard::where('bankdeposit', $name)->get();
         return $bankCards;
         // $bankCards = BankCard::where('deleted_at', null)->get();
         // return dd($id);

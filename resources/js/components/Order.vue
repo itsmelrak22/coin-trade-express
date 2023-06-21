@@ -204,12 +204,15 @@ export default {
             },
             Home(){
                 this.$router.push('/')
+                location.reload();
             },
             Center(){
                 this.$router.push('/AccountInfo')
+                location.reload();
             },
             Order(){
                 this.$router.push('/Order')
+                location.reload();
             },
     },
 };
