@@ -2,26 +2,17 @@
     <div class="main">
         <div>
             <center>
-                <v-card flat max-width="80%">
+                <v-card flat>
                     <v-card-title style="background-color: #d7d3d3">
-                        <v-btn  @click="backMain()" plain
-                            ><v-icon>mdi-keyboard-backspace</v-icon></v-btn
-                        >
-                        <b>{{ details.symbolDisplayName }}</b>
-                        <b>{{ obj.counting }}</b> </v-card-title
-                        
-                    >
-                </v-card>
+                      <v-btn @click="backMain()" plain><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
+                      <b>{{ details.symbolDisplayName }}</b>
+                      <b>{{ obj.counting }}</b>
+                    </v-card-title>
+                  </v-card>
 
-                <v-card flat max-width="80%" max-height="55%">
+                <v-card flat  max-height="55%">
                     <v-card-title>
-                        <h1
-                            :style="
-                                details.change > 0
-                                    ? 'color:Green;'
-                                    : 'color:red;'
-                            "
-                        >
+                        <h1 :style="details.change > 0 ? 'color:Green;' : 'color:red;' ">
                             {{ details.now_price }}000
                         </h1>
                         <v-chip color="error">{{ details.change }}%</v-chip>
@@ -82,7 +73,7 @@
                         <v-simple-table
                             fixed-header
                             dense
-                            style="overflow-y: auto; min-width: 80%"
+                            style="overflow-y: auto;"
                             :height="$vuetify.breakpoint.height - 220"
                         >
                             <template v-slot:default>
@@ -131,8 +122,8 @@
         <v-footer fixed>
             <v-container fluid>
                 <v-row>
-                    <v-col
-                        ><v-btn
+                    <v-col >
+                        <v-btn
                             block
                             dark
                             style="background-color: #12a36e"
@@ -140,7 +131,7 @@
                             >Up</v-btn
                         ></v-col
                     >
-                    <v-col
+                    <v-col 
                         ><v-btn 
                         dark 
                         style="background-color: #d72015" 
@@ -273,7 +264,7 @@
                         placeholder="Minimun Purchase Limit 100"
                         outlined
                         dense
-        
+                        @keypress="onlyNumber"
                         v-model="obj.recharge"
                         ></v-text-field>
                     </v-col>
@@ -286,13 +277,19 @@
                     <v-col class="text-right">
                         <span> {{ Account.Asset }}</span>
                         <br />
-                        <span class="text-right">
-                        {{obj.recharge == null ? 0 : 
-                            (obj.profit = parseFloat(obj.recharge)
-                             * parseFloat(discount) + 
-                            parseFloat(obj.recharge))
-                        }} </span
-                        ><br/>
+                        
+                        <span class="text-right " v-if="obj.recharge == 0">
+                        {{obj.recharge ==  0 ? 0 : 
+                            (obj.profit = parseInt(obj.recharge)  * parseInt(discount) + parseInt(obj.recharge))
+                        }} </span>
+                        <span class="text-right " v-else>
+                            {{obj.recharge ==  null ? 0 : 
+                                (obj.profit = parseInt(obj.recharge)  * parseInt(discount) + parseInt(obj.recharge))
+                            }} </span>
+
+                        
+                        
+                        <br/>
                        
                     </v-col>
                     </v-row>
@@ -343,7 +340,6 @@ export default {
         errors: [],
         Account:[],
         overlay: false,
-        title: 'mdi-check-circle-outline'
     }),
 
     created() {
@@ -388,7 +384,7 @@ export default {
             axios.get(`/api/AccountInfo`).then((res) => {
             for(let i = 0; i < res.data.length; i++){
                 if(this.loggedInUser.id == res.data[i].id){
-                console.log('data',res.data[i])
+                // console.log('data',res.data[i])
                 this.Account = res.data[i]
                 }
             }
@@ -475,7 +471,7 @@ export default {
             axios.get(`/api/getMarketTables/${symbolDisplayName}`)
                 .then((res) => {
                     this.getmarket_arr = res.data;
-                    console.log(this.getmarket_arr, "sssssss");
+                    // console.log(this.getmarket_arr, "sssssss");
                 });
         },
 
@@ -505,7 +501,7 @@ export default {
                 });
         },
         upbtn() {
-            this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
+            // this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
             this.obj.userId = this.loggedInUser.id;
             this.obj.email = this.loggedInUser.email;
             this.obj.profit = this.loggedInUser.remember_token;
@@ -536,20 +532,19 @@ export default {
                 }
             })
             if(this.obj.recharge >= 100){
-                 if(this.Account.Asset >= this.obj.recharge ){
+                if (parseInt(this.Account.Asset) >= parseInt(this.obj.recharge)) {
                     if(100000000 > this.obj.recharge){
                         this.discount == 0.6
                     ? (this.obj.discountResult = "60")
                     : this.discount == 0.4
                     ? (this.obj.discountResult = "120")
                     : (this.obj.discountResult = "180");
-                    console.log(this.obj.discountResult);
                         // this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
                         this.obj.trading = "pending";
                         this.obj.T_id = `T${moment().format("YYYYMMDD")}-${this.GenerateTID(this.LastTID)}`
                         this.obj.order_time = moment().format("YYYY-MM-DD HH:mm:ss");
                         this.obj.complete_time = moment().format("YYYY-MM-DD HH:mm:ss");
-                        this.obj.profit = this.obj.profit - this.obj.recharge;
+                        this.obj.profit
                         
                         let addingTime = null;
                         this.discount == 0.6
@@ -557,13 +552,18 @@ export default {
                         : this.discount == 0.4
                         ? (addingTime = 2)
                         : (addingTime = 3);
+
                         let d = moment().format("YYYY-MM-DD HH:mm:ss");
                         let a = d.substring(0, 14);
                         let b = parseFloat(d.substring(14, 16)) + addingTime;
                         let c = d.substring(16, 19);
                         let combine = a + b + c;
                         this.obj.closing_time = moment().format(`${combine}`);
-
+                        this.obj.delection = parseInt(this.Account.Asset - this.obj.recharge)
+                        console.log('total',this.obj)
+                        axios.post(`/api/BetDeduction`,this.obj).then((res)=>{
+                            this.GetUser()
+                        })
                         axios.post("api/Dashboard/store", this.obj)
                             .then((res) => {
                                 this.obj = {};
@@ -574,11 +574,8 @@ export default {
                                     animation:true,
                                     text: 'Process Completed',
                                 })
-                                // axios.post(`/api/clientprocess`,total).then((res)=>{
-                                //     // alert('success')
-                                // })
-                            
                             });
+                            
                     }else{
                         toastMixin.fire({
                         icon: 'error',
@@ -622,19 +619,30 @@ export default {
             console.log('load')
             axios
                 .get(`api/GetTID`).then((res) => {
-                    console.log('resdto',res.data)
+                    // console.log('resdto',res.data)
                     this.LastTID = "";
                     if (res.data[0] != null) {
                         this.TIDArr = res.data[0];
-                        console.log('last1',this.TIDArr)
+                        // console.log('last1',this.TIDArr)
                         this.LastTID = this.TIDArr; // Last VAMID for current date
-                        console.log('last2',this.LastUserID)
+                        // console.log('last2',this.LastUserID)
                     } else {
                         this.LastTID = "XXXXXXXXXX-000000";
-                        console.log('Employee',this.LastTID)
+                        // console.log('Employee',this.LastTID)
                     }
                 })
         }, //end of load vehicleID/VAMSID
+
+
+        onlyNumber($event) {
+            let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+            if (keyCode < 48 || keyCode > 57) {
+                // 46 is dot
+                $event.preventDefault();
+            }
+        }, //END FOR ONLY NUMBER FUNCTION
+
+
     },
     components: {
         CoinCharts,
@@ -661,10 +669,104 @@ th {
 }
 
 .main{
-    overflow: auto;
-    height:700px;
-    padding: 20px;
-    width: 80%;
-    margin: auto;
+    width: 100%;
 }
+@media only screen and (max-width: 375px) {
+    .main {
+      /* Adjust styles for iPhone 6/7/8 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .main .v-card {
+      width: 100%;
+    }
+  }
+
+  @media only screen and (min-width: 376px) and (max-width: 600px) {
+    .main {
+      /* Adjust styles for larger mobile devices */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .main .v-card {
+      width: 80%;
+    }
+  }
+
+@media only screen and (max-width: 600px) {
+    .main {
+      /* Adjust styles for mobile devices */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .main .v-card {
+      width: 100%;
+    }
+  }
+
+  @media only screen and (min-width: 601px) and (max-width: 1024px) {
+    .main {
+      /* Adjust styles for tablets */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .main .v-card {
+      width: 80%;
+    }
+  }
+
+  @media only screen and (min-width: 1025px) {
+    .main {
+      /* Default styles for larger screens */
+      display: flex;
+      justify-content: center;
+    }
+  
+    .main .v-card {
+      width: 60%;
+    }
+  }
+
+  /* Additional CSS styles for the table */
+
+  @media only screen and (max-width: 375px) {
+    .v-simple-table {
+      /* Adjust table width for iPhone 6/7/8 */
+      width: 100%;
+    }
+  }
+  @media only screen and (min-width: 376px) and (max-width: 600px) {
+    .v-simple-table {
+      /* Adjust table width for larger mobile devices */
+      width: 80%;
+    }
+  }
+@media only screen and (max-width: 600px) {
+    .v-simple-table {
+      /* Adjust table width for mobile devices */
+      width: 100%;
+    }
+  }
+
+  @media only screen and (min-width: 601px) and (max-width: 1024px) {
+    .v-simple-table {
+      /* Adjust table width for tablets */
+      width: 80%;
+    }
+  }
+
+  @media only screen and (min-width: 1025px) {
+    .v-simple-table {
+      /* Default table width for larger screens */
+      width: 60%;
+    }
+  }
 </style>

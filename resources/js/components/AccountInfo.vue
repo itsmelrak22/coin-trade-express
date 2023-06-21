@@ -34,7 +34,7 @@
       <v-card flat class="user-id">
         <v-simple-table>
           <tbody>
-            <tr >
+            <tr @click="GotoRechargeHistory" >
               <td>Recharge Record</td>
             </tr>
             <tr>
@@ -139,26 +139,32 @@ export default {
     },
     GotoRecharge(){
       this.$router.push("/DepositView");
+      location.reload();
     },
     GotoWithdrawal(){
       this.$router.push("/Withdrawal");
+      location.reload();
     },
     Home(){
       this.$router.push('/')
+      location.reload();
     },
     Center(){
       this.$router.push('/AccountInfo')
+      location.reload();
     },
     Order(){
       this.$router.push('/Order')
+      location.reload();
     },
 
     BankCard(){
       this.$router.push('/BankCard')
+      location.reload();
     },
-    // RechargeHistory(){
-    //   this.$router.push("/RechargeHistory");
-    // }
+    GotoRechargeHistory(){
+      this.$router.push("/RechargeHistory");
+    }
     },
 }
 </script>

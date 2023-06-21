@@ -46,14 +46,14 @@
                             <v-row>
                                 <v-col><span>Name</span><br/></v-col>
                                 <v-col><span>Bank Name</span><br/></v-col>
-                                <v-col><span>Branch Branch</span><br/></v-col>
+                                <!-- <v-col><span>Branch Branch</span><br/></v-col> -->
                                 <v-col><span>Bank Account</span><br/></v-col>
                                 <v-col><span>IFSC</span><br/></v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col><span>{{item.name}}</span><br/></v-col>
                                     <v-col><span>{{item.bankdeposit}}</span><br/></v-col>
-                                    <v-col><span>{{item.depositbranch}}</span><br/></v-col>
+                                    <!-- <v-col><span>{{item.depositbranch}}</span><br/></v-col> -->
                                     <v-col><span>{{item.bankaccount}} </span><br/></v-col>
                                     <v-col><span>{{item.ifsc}} </span><br/></v-col>
                                 </v-row>
@@ -89,7 +89,7 @@
                         >
                             <v-icon>mdi-arrow-left</v-icon>
                         </v-btn>
-                        <h3>Go Back</h3>
+                        <h3>GO BIND YOUR BANKCARD NOW</h3>
                     </v-toolbar>
                     <v-card-text style="background-color: #FFFFFF">
                     <v-row  no-gutters class="ma-3">
@@ -102,36 +102,34 @@
                         <span style="font-size: 11px;font-weight:bold">Please enter your phone number</span>
                     </v-row>
                     <v-row  no-gutters class="ma-3">
-                        <v-text-field color="black" v-model="obj.phonenumber" dense hide-details> </v-text-field>
+                        <v-text-field color="black" @keypress="onlyNumber" v-model="obj.phonenumber" dense hide-details> </v-text-field>
                     </v-row>
                 </v-card-text>
                   <v-card-text style="background-color: #FFFFFF">
        
                     <v-row  no-gutters  class="ma-3">
-                        <span style="font-size: 11px;font-weight:bold">Bank of Deposit </span>
+                        <span style="font-size: 11px;font-weight:bold">Name of Bank </span>
                     </v-row>
                     <v-row  no-gutters class="ma-3">
-                        <v-select   :items="bankdeposit_arr"
-                        item-text="bankName"
-                        item-value="bankName" color="black" class="custom-text-field" v-model="obj.bankdeposit" dense hide-details> </v-select>
+                        <v-text-field  color="black" class="custom-text-field" @keyup="CheckingName" v-model="obj.bankdeposit" dense hide-details> </v-text-field>
                     </v-row>
-                    <v-row  no-gutters  class="ma-3">
+                    <!-- <v-row  no-gutters  class="ma-3">
                         <span style="font-size: 11px;font-weight:bold">Please enter the Bank of Deposit Branch</span>
                     </v-row>
                     <v-row  no-gutters class="ma-3">
                         <v-text-field color="black" v-model="obj.depositbranch" dense hide-details> </v-text-field>
-                    </v-row>
+                    </v-row> -->
                     <v-row  no-gutters  class="ma-3">
                         <span style="font-size: 11px;font-weight:bold">Bank Account</span>
                     </v-row>
                     <v-row  no-gutters class="ma-3">
-                        <v-text-field color="black" v-model="obj.bankaccount" dense hide-details> </v-text-field>
+                        <v-text-field color="black" @keypress="onlyNumber" v-model="obj.bankaccount" dense hide-details> </v-text-field>
                     </v-row>
                     <v-row  no-gutters  class="ma-3">
                         <span style="font-size: 11px;font-weight:bold">IFSC Code</span>
                     </v-row>
                     <v-row  no-gutters class="ma-3">
-                        <v-text-field color="black" v-model="obj.ifsc" dense hide-details> </v-text-field>
+                        <v-text-field color="black" @keypress="onlyNumber" v-model="obj.ifsc" dense hide-details> </v-text-field>
                     </v-row>
                 
 
@@ -203,43 +201,53 @@ export default {
     created() {
         this.getBankInfo();
     },
-computed:{
+    computed:{
 
-        ...mapState(["loggedInUser"]),
+ ...mapState(["loggedInUser"]),
 
-},
+    },
     methods: {
-        ...mapActions(["GetAccounts"]),
-        getBankIndo(){
-            axios.get(`api/bankcards`).then((res)=>{
-            console.log(res.data.length == 0)
-                    this.BankInfo = res.data
-                    console.log('bankinfo',this.BankInfo)
-        })
+        CheckingName(){
+            var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation : false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar : true,
+                dibOpen : (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            for(let i = 0; i < this.BankInfo.length; i++){
+                if(this.BankInfo[i].bankdeposit != this.obj.bankdeposit){
+                    console.log('dpa')
+                }else{
+                    toastMixin.fire({
+                        icon: 'error',
+                        title : 'Please!',
+                        animation:true,
+                        text: 'Bank of Name are Exists',
+                    })
+                }
+            }
+            console.log(this.BankInfo)
+            console.log(this.obj.bankdeposit)
         },
+        ...mapActions(["GetAccounts"]),
+        // getBankIndo(){
+        //     axios.get(`api/bankcards`).then((res)=>{
+        //     console.log(res.data.length == 0)
+        //             this.BankInfo = res.data
+        //             console.log('bankinfo',this.BankInfo)
+        // })
+        // },
 
         openBankcard() {
-            // var toastMixin = Swal.mixin({
-            //     toast: true,
-            //     icon: 'success',
-            //     title: 'General Title',
-            //     animation : false,
-            //     position: 'top-right',
-            //     showConfirmButton: false,
-            //     timer: 1500,
-            //     timerProgressBar : true,
-            //     dibOpen : (toast) => {
-            //     toast.addEventListener('mouseenter', Swal.stopTimer)
-            //     toast.addEventListener('mouseleave', Swal.resumeTimer)
-            //     }
-            // })
-            // alert('Please End your Game Before You Withdraw')
-            // toastMixin.fire({
-            //             icon: 'error',
-            //             title : 'Please!',
-            //             animation:true,
-            //             text: 'Please End your Game Before You Withdraw...',
-            //         })
+          
             this.dialogBankCard = true;
             this.title = 'Add'
         },
@@ -248,6 +256,7 @@ computed:{
             this.dialogBankCard = val;
         },
         submitBank(){
+            
             var toastMixin = Swal.mixin({
                 toast: true,
                 icon: 'success',
@@ -263,15 +272,14 @@ computed:{
                 }
             })
             if(this.title == 'Add'){
-                console.log(this.obj.bankdeposit == this.checking.bankdeposit)
+                console.log('start1')
                 if(this.obj.name){
                 if(this.obj.phonenumber){
                     if(this.obj.bankdeposit){
-                        if(this.obj.depositbranch){
+                        // if(this.obj.depositbranch){
                             if(this.obj.bankaccount){
                                 if(this.obj.ifsc){
-                                    if(this.obj.bankdeposit != this.checking.bankdeposit){
-                                        this.obj.UserID = this.loggedInUser.id;
+                                    this.obj.UserID = this.loggedInUser.id;
                                         axios.post("api/bankcard/store", this.obj).then((res) => {
                                         this.obj = {};
                                         this.dialogBankCard = false;
@@ -283,15 +291,21 @@ computed:{
                                         })
                                         this.getBankInfo();
                                         });
-                                    }else{
-                                        toastMixin.fire({
-                                        icon: 'error',
-                                        title : 'Please!',
-                                        animation:true,
-                                        text: 'Youy can regiter one bank at a time',
-                                        })
-                                        }
+                                //     for(let i = 0; i < this.BankInfo.length; i++){
+                                //             if(this.BankInfo[i].bankdeposit == this.obj.bankdeposit){
+                                //                 toastMixin.fire({
+                                //                 icon: 'error',
+                                //                 title : 'Please!',
+                                //                 animation:true,
+                                //                 text: 'Bank of Name are Exists',
+                                //         })
+                                        
+                                //     }else{
+                                        
+                                        
+                                //     }
                                     
+                                // } 
                                 }else{
                                     toastMixin.fire({
                                     icon: 'error',
@@ -310,14 +324,14 @@ computed:{
                                 })
                             }
                           
-                        }else{
-                            toastMixin.fire({
-                            icon: 'error',
-                            title : 'Please!',
-                            animation:true,
-                            text: 'Please Input your Bank Branch!',
-                            })
-                        }
+                        // }else{
+                        //     toastMixin.fire({
+                        //     icon: 'error',
+                        //     title : 'Please!',
+                        //     animation:true,
+                        //     text: 'Please Input your Bank Branch!',
+                        //     })
+                        // }
                     }else{
                         toastMixin.fire({
                         icon: 'error',
@@ -382,17 +396,23 @@ computed:{
 
     getBankInfo(){
         axios.get(`api/bankcards/${this.loggedInUser.id}`).then((res)=>{
+            
+            this.BankInfo = res.data
+            // for(let i = 0; i < this.BankInfo.length; i++){
+            //     this.checking = res.data[i]
+                
+            // }
+            // console.log(this.checking.ifsc)
             // console.log(res.data[0].UserID)
-            for(let i = 0; i < res.data.length; i++){
-                if(res.data[i].UserID == this.loggedInUser.id ){
-                this.BankInfo = res.data
-                // console.log('bankinfo',this.BankInfo)
-                this.checking = res.data[i]
-                console.log('bankinfo', this.checking.bankdeposit)
-                }else{
-                  this.checking = res.data[i]
-                }
-            }
+            // for(let i = 0; i < res.data.length; i++){
+                // if(res.data[i].UserID == this.loggedInUser.id ){
+                // this.BankInfo = res.data[i]
+                // console.log('bankinfo1',this.BankInfo)
+                // this.checking = res.data[i]
+                // }else{
+                //   this.checking = res.data[i]
+                // }
+            // }
         })
     },
 
@@ -433,7 +453,15 @@ computed:{
                 this.getBankInfo();
                 location.reload();
                 });
-    }
+    },
+
+    onlyNumber($event) {
+            let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+            if (keyCode < 48 || keyCode > 57) {
+                // 46 is dot
+                $event.preventDefault();
+            }
+        }, //END FOR ONLY NUMBER FUNCTION
     },
 };
 </script>

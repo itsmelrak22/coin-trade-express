@@ -87,37 +87,52 @@ class UserController extends Controller
     }
 
     public function adminprocess(Request $request){
-        
+        // return dd($request);
         $data =  User::all();
         foreach ($data as $item) {
             // pag null at d nabago ni admin ung win or lose
             if($request['preset'] === null  && $item['id'] == $request->User_code){
                 echo ('1');
-                $total = $item['Asset'] + $request->result;
+                $total = $item['Asset'] + $request->profit;
                 User::where('id', $request->User_code)
                 ->update([
-                    'Asset' => $item['Asset'] + $request->result,
+                    'Asset' => $item['Asset'] + $request->profit,
                 ]);
             return response()->json('The post successfully Updated');
             }
             //pag win 
             else if($request['preset'] === 'Win' && $item['id'] == $request->User_code){
                 echo ('2');
-                $total = $item['Asset'] + $request->result;
+                $total = $item['Asset'] + $request->profit;
                 User::where('id', $request->User_code)
                 ->update([
-                    'Asset' => $item['Asset'] + $request->result,
+                    'Asset' => $item['Asset'] + $request->profit,
                 ]);
             }
             //pag lose
             else if($request['preset'] === 'Lost' && $item['id'] == $request->User_code){
-                echo ('3');
-                User::where('id', $request->User_code)
-                ->update([
-                    'Asset' => $item['Asset'] - $request->quantity,
-                ]);
+                echo ('Lost');
+                // User::where('id', $request->User_code)
+                // ->update([
+                //     'Asset' => $item['Asset'] - $request->quantity,
+                // ]);
             }
         }
+    }
+
+    public function BetDeduction(Request $request)
+    {
+        // return dd($request);
+
+        User::where('id', $request->userId)
+            ->where('email' , $request->email)
+                    // ->where('bankdeposit', $request->bankdeposit)
+                    // ->where('depositbranch', $request->depositbranch)
+                    
+            ->update([
+                'Asset' => $request->delection,
+            ]);
+        return response()->json('The post successfully Updated');
     }
 
     /**

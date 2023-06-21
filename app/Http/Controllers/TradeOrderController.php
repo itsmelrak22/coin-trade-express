@@ -20,6 +20,18 @@ class TradeOrderController extends Controller
         
     }
 
+    public function index2($id)
+    {
+        //
+        // return TradeOrder::all();
+        // return TradeOrder::orderBy('created_at', 'desc')->get();
+        $tradeOrder = TradeOrder::where('deleted_at', null)
+                    ->where('User_code', $id)
+                    ->orderBy('created_at', 'desc')->get();
+        return $tradeOrder;
+        
+    }
+
     public function GetTID(){
         $data = TradeOrder::orderBy('created_at', 'desc')
         ->pluck('T_id');
