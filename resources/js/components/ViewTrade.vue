@@ -575,6 +575,7 @@ export default {
                                     animation:true,
                                     text: 'Process Completed',
                                 })
+                                this.$socket.emit('newUpdate', { updateType: "ViewTrade" })
                             });
                             
                     }else{

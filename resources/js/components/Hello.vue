@@ -11,20 +11,10 @@
 
 <script>
 export default {
-    sockets: {
-        // NOTE : SOCKET 
-        updateReceived: function(socket) {
-            if (socket && socket.dispatchType == 'response' ) {
-                console.log('outputData', socket.data.outputData)
-            }
-        }
-    },
     methods: {
         test(){
-            this.$socket.emit('newUpdate', { dispatchType: 'request', data: {
-                customerCode: '0008888-2609',
-                loginUserID: this.$store.state.loggedInUser.id,
-            } })
+            // this.$socket.emit('newUpdate', "hello world")
+            this.$socket.emit('newUpdate', { updateType: "ViewTrade" })
         }
     }
 
