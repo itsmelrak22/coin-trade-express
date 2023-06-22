@@ -11,7 +11,8 @@ const persistedData = new createPersistedState({
         loggedInUser : state.loggedInUser,
         token: state.token,
         searchItem: state.searchItem,
-        toTrading: state.toTrading
+        toTrading: state.toTrading,
+        ASSET: state.ASSET
     })
 })
 
@@ -110,6 +111,7 @@ export default new Vuex.Store({
         
         timeout: null,
         loader: false,
+        ASSET: null,
         searchItem: '',
 
         tradeorders : [],
@@ -314,6 +316,10 @@ export default new Vuex.Store({
 
         "STORE_USERDEPOSIT" : (state, newState)=>{
             state.userDeposit = newState
+        },
+        
+        "STORE_ASSET" : (state, newState)=>{
+            state.ASSET = newState
         },
 
 

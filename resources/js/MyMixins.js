@@ -15,6 +15,7 @@ const myPlugins = {
                     'userDeposit',
                     'toTrading',
                     'loggedInUser',
+                    'ASSET'
 
                 ]),
             },

@@ -53,6 +53,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'country' => $request->country,
             'password' => Hash::make($request->password),
+            'Asset' => '0'
         ]);
 
         \DB::table('agent_clients')

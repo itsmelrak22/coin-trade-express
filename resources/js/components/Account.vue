@@ -1,303 +1,518 @@
 <template>
-   <div style="background-color:#D7D3D3">
-    <br>
-    <v-row>
-        <v-col cols="12">
-            <v-card flat>
-                <v-row>
-                    
-                    <!-- <v-col >
-                        <br>
-                        <span style="margin-left:50px!important;"> UserName</span>
-                    </v-col>
-                    <v-col cols="5">
-                        <br>
-                        <v-text-field style="width:400px;" outlined dense label="USER"></v-text-field>
-                    </v-col>
-                    <v-col>
-                        <br>
-                        <span> Phone Nmuber</span>
-                    </v-col>
-                    <v-col cols="5">
-                        <br>
-                        <v-text-field style="width:400px;" outlined dense label="Phone Number"></v-text-field>
-                    </v-col> -->
-                </v-row>
+    <div class="grid-container" fluid>
+        <div>
+            <!-- User information -->
+
+            <!-- Asset Center -->
+            <!-- <h1> {{ checking.UserID }}  </h1> 
+            <h1> log{{loggedInUser.id }}</h1>   -->
+            <!-- v-if="this.checking.UserID != this.loggedInUser.id" -->
+            <v-card flat class="user-id" >
+                <v-list dense>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-card>
+                                <v-card-text>
+                                    <v-col></v-col>
+                                </v-card-text>
+                            </v-card>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-btn
+                        absolute
+                        bottom
+                        block
+                        dark
+                        color="primary"
+                        @click="openBankcard()"
+                    >
+                        <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                </v-list>
             </v-card>
-        </v-col>
-        <v-col cols="12">
-            <v-card>
-                <v-card-title>
-                    Account List
-                    <v-spacer/>
-                    <v-btn @click="Add()" color="primary">Add Account</v-btn>
-                    <v-icon @click="Refresh()">mdi-refresh</v-icon>
-                </v-card-title>
-                <v-simple-table>
-                    <thead>
-                        <tr>
-                            <th>Serial Number</th>
-                            <th>UserName</th>
-                            <th>Actual Name</th>
-                            <th>Phone Number</th>
-                            <th>Created Date</th>
-                            <th>Role</th>
-                            <th>Remarks</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(accounts,index) in accounts" :key="index">
-                            <td>{{accounts.id}}</td>
-                            <td>{{accounts.UserName}}</td>
-                            <td>{{accounts.ActualName}}</td>
-                            <td>{{accounts.PhoneNumber}}</td>
-                            <td>{{(accounts.created_at).slice(0, 19)}}</td>
-                            <td>
-                                <span v-if="accounts.Role == 0">To Promote</span>
-                                <span v-if="accounts.Role == 1">Deposit and Withdrawal</span>
-                                <span v-if="accounts.Role == 2">System Administrator</span>
-                            </td>
-                            <td>{{accounts.Remarks}}</td>
-                            <td>
-                                <v-icon @click="HandleEdit(accounts)">mdi-pencil</v-icon>
-                                <v-icon>mdi-trash-can</v-icon>
-                            </td>
 
-                        </tr>
-                    </tbody>
-                </v-simple-table>
-            </v-card>
-        </v-col>
-    </v-row>
+            
+        <v-list dense>
+            <v-list-item v-for="(item, i) in BankInfo" :key="i">
+                <v-list-item-content>
+                    <v-card >
+                        <v-card-text>
+                            <v-row>
+                                <v-col>
+                                    <v-btn plain color="success" @click="Handle_Edit(item)"><v-icon>mdi-pencil</v-icon></v-btn>
+                                    <v-btn plain color="error" @click="Handle_Delete(item)"><v-icon>mdi-trash-can</v-icon></v-btn>
+                                    </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col><span>Name</span><br/></v-col>
+                                <v-col><span>Bank Name</span><br/></v-col>
+                                <!-- <v-col><span>Branch Branch</span><br/></v-col> -->
+                                <v-col><span>Bank Account</span><br/></v-col>
+                                <v-col><span>IFSC</span><br/></v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col><span>{{item.name}}</span><br/></v-col>
+                                    <v-col><span>{{item.bankdeposit}}</span><br/></v-col>
+                                    <!-- <v-col><span>{{item.depositbranch}}</span><br/></v-col> -->
+                                    <v-col><span>{{item.bankaccount}} </span><br/></v-col>
+                                    <v-col><span>{{item.ifsc}} </span><br/></v-col>
+                                </v-row>
+                                <v-row>
+                                <!-- <v-col><span>time</span><br/></v-col>
+                                <v-col><span>P/L[BTC]</span><br/></v-col>
+                                <v-col><span>status </span><br/></v-col> -->
+                            
+                                </v-row>
+                        
+                                <v-row>
+                                <!-- <v-col>Sec</v-col>
+                                <v-col></v-col>
+                                <v-col></v-col> -->
+                                </v-row>
+                        </v-card-text>
+                    </v-card>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
 
-    <v-dialog v-model="AddDialog" width="600px" persistent>
-        <v-card flat>
-            <v-card-title >{{title}} Account 
-                <v-spacer/>
-                <v-icon @click="Handleclose()">mdi-close-circle</v-icon>
-            </v-card-title>
-            <v-card-text>
-                <v-row no-gutters>
-                    <v-col class="pt-3" cols="2">
-                        <span>*</span><label>UserName</label>
-                    </v-col>
-                    <v-col cols="10">
-                        <v-text-field 
-                        v-model="AddData.UserName" 
-                        outlined dense label="Username"
-                        ></v-text-field>
-                    </v-col>
-                    
-                    <v-col class="pt-3" cols="2">
-                        <span>*</span><label>Password</label>
-                    </v-col>
-                    <v-col cols="10">
-                        <v-text-field 
-                        v-model="AddData.Password" 
-                        outlined dense label="Password"
-                        ></v-text-field>
-                    </v-col>
+            <!-- Your bottom sheet content here -->
 
-                    <v-col class="pt-3" cols="2">
-                        <span>*</span><span>Role</span>
-                    </v-col>
-                    <v-col cols="10">
-                        <v-autocomplete 
-                        :items="Role" 
-                        item-text="Name"
-                        item-value="value"
-                        v-model="AddData.Role" 
-                        outlined dense label="Role"
-                        ></v-autocomplete>
-                    </v-col>
-
-                    <v-col class="pt-3" cols="2">
-                        <span>*</span><span>Department</span>
-                    </v-col>
-                    <v-col cols="10">
-                        <v-autocomplete
-                        :items="Department" 
-                        v-model="AddData.Department" 
-                        outlined dense label="Department"
-                        ></v-autocomplete>
-                    </v-col>
-
-                    <v-col class="pt-3" cols="2">
-                        <span>*</span><span>Actual Name</span>
-                    </v-col>
-                    <v-col cols="10">
-                        <v-text-field 
-                        v-model="AddData.ActualName" 
-                        outlined dense label="Actual Name"
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col class="pt-3" cols="2">
-                        <span>Phone Number</span>
-                    </v-col>
-                    <v-col cols="10">
-                        <v-text-field 
-                        @keypress="onlyNumber"
-                        v-model="AddData.PhoneNumber" 
-                        outlined dense label="Phone Number"
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col class="pt-3" cols="2">
-                        <span>Super Administrator</span>
-                    </v-col>
-                    <v-col cols="10">
-                        <v-btn-toggle
-                        v-model="AddData.toggle_exclusive"
-                        mandatory
+            <v-dialog v-model="dialogBankCard" fullscreen>
+                <v-card color="#F1F1F1" flat>
+                    <v-toolbar color="#F1F1F1"  dense flat>
+                        <v-btn
+                            icon
+                            large
+                            dark
+                            color="black"
+                            @click="returnBankCard()"
                         >
-                        <v-btn dark color="primary" value="0">
-                            No
+                            <v-icon>mdi-arrow-left</v-icon>
                         </v-btn>
-                        <v-btn dark color="primary" value="1">
-                            Yes
-                        </v-btn>
-                        </v-btn-toggle>
-                    </v-col>
+                        <h3>GO BIND YOUR BANKCARD NOW</h3>
+                    </v-toolbar>
+                    <v-card-text style="background-color: #FFFFFF">
+                    <v-row  no-gutters class="ma-3">
+                        <span style="font-size: 11px;font-weight:bold">Please enter your name</span>
+                    </v-row>
+                    <v-row  no-gutters class="ma-3">
+                        <v-text-field  color="black" v-model="obj.name" dense hide-details> </v-text-field>
+                    </v-row>
+                    <v-row  no-gutters class="ma-3">
+                        <span style="font-size: 11px;font-weight:bold">Please enter your phone number</span>
+                    </v-row>
+                    <v-row  no-gutters class="ma-3">
+                        <v-text-field color="black" @keypress="onlyNumber" v-model="obj.phonenumber" dense hide-details> </v-text-field>
+                    </v-row>
+                </v-card-text>
+                  <v-card-text style="background-color: #FFFFFF">
+       
+                    <v-row  no-gutters  class="ma-3">
+                        <span style="font-size: 11px;font-weight:bold">Name of Bank </span>
+                    </v-row>
+                    <v-row  no-gutters class="ma-3">
+                        <v-text-field  color="black" class="custom-text-field" @keyup="CheckingName" v-model="obj.bankdeposit" dense hide-details> </v-text-field>
+                    </v-row>
+                    <!-- <v-row  no-gutters  class="ma-3">
+                        <span style="font-size: 11px;font-weight:bold">Please enter the Bank of Deposit Branch</span>
+                    </v-row>
+                    <v-row  no-gutters class="ma-3">
+                        <v-text-field color="black" v-model="obj.depositbranch" dense hide-details> </v-text-field>
+                    </v-row> -->
+                    <v-row  no-gutters  class="ma-3">
+                        <span style="font-size: 11px;font-weight:bold">Bank Account</span>
+                    </v-row>
+                    <v-row  no-gutters class="ma-3">
+                        <v-text-field color="black" @keypress="onlyNumber" v-model="obj.bankaccount" dense hide-details> </v-text-field>
+                    </v-row>
+                    <v-row  no-gutters  class="ma-3">
+                        <span style="font-size: 11px;font-weight:bold">IFSC Code</span>
+                    </v-row>
+                    <v-row  no-gutters class="ma-3">
+                        <v-text-field color="black" @keypress="onlyNumber" v-model="obj.ifsc" dense hide-details> </v-text-field>
+                    </v-row>
+                
 
-                    <v-col class="pt-3" cols="2">
-                        <span>*</span><span>Remarks</span>
-                    </v-col>
-                    <v-col cols="10">
-                        <v-text-field 
-                        v-model="AddData.Remarks" 
-                        outlined dense label="Remarks"
-                        ></v-text-field>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer/>
-                <v-btn >Cancel</v-btn>
-                <v-btn @click="SAVE()" color="primary">Confirm</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
-   </div>
+                </v-card-text>
+                <v-card-text style="background-color: #FFFFFF">
+                    <v-row  no-gutters class="ma-3">
+                        <v-btn color ="primary" block @click="submitBank()">Submit</v-btn>
+                    </v-row>
+</v-card-text>
+                </v-card>
+            </v-dialog>
+
+            <template>
+                <v-footer plain padless class="footer">
+                    <v-bottom-navigation color="primary" fixed>
+                        <v-row no-gutters>
+                            <v-col class="text-center" cols="4">
+                                <v-btn @click="Home" block>
+                                    <v-icon> mdi-home-analytics </v-icon>
+                                    Home
+                                </v-btn>
+                            </v-col>
+                            <v-col class="text-center" cols="4">
+                                <v-btn block @click="Order">
+                                    <v-icon> mdi-chart-line-stacked </v-icon>
+                                    Order
+                                </v-btn>
+                            </v-col>
+                            <v-col class="text-center" cols="4">
+                                <v-btn @click="Center" block>
+                                    <v-icon> mdi-account </v-icon>
+                                    My Center
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-bottom-navigation>
+                </v-footer>
+            </template>
+        </div>
+    </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
+import Swal from "sweetalert2";
 export default {
-    data:()=>({
-    
-    title: '',
-    AddDialog: false,
-    AddData : {},
-    Role : [
-        { Name :'To Promote', value: 0} ,
-        { Name :'Deposit and Withdrawal',value : 1} ,
-        { Name :'System Administrator', value : 2} ,
-    ],
-    Department : [
-        'L1 Department',
-        'Technology Department'
-    ]
+    data: () => ({
+        dialogBankCard: false,
+        bankdeposit_arr:[
+            {bankName:'UNITED OVERSEAS BANK LTD'},
+            {bankName:'ANEXT BANK PTE. LTD.'},
+            {bankName:'AUSTRALIA AND NEW ZEALAND BANKING GROUP LIMITED'},
+            {bankName:'BANK OF CHINA LIMITED'},
+            {bankName:'BNP PARIBAS'},
+            {bankName:'CIMB BANK BERHAD'},
+            {bankName:'CITIBANK NA SINGAPORE'},
+        ],
+        obj:{},
+        BankInfo:{},
+        checking:{},
+        checking1:{},
+        BankInfo: [],
+        title: 'Add',
+        
+    csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+
     }),
 
-    created(){
-        console.log(this.accounts)
+    created() {
+        this.getBankInfo();
     },
-
     computed:{
 
-        ...mapState
-            ([
-                'accounts'
-            ])
-        
+ ...mapState(["loggedInUser"]),
+
     },
-
-    mounted(){
-                this.GetAccounts()
-    },
-    
-
-    methods:{
-        ...mapActions
-            ([
-                'GetAccounts'
-            ]),
-
-
-        Add(){
-            this.title = "Add"
-            this.AddDialog = true
+    methods: {
+        CheckingName(){
+            var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation : false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar : true,
+                dibOpen : (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            for(let i = 0; i < this.BankInfo.length; i++){
+                if(this.BankInfo[i].bankdeposit != this.obj.bankdeposit){
+                    console.log('dpa')
+                }else{
+                    toastMixin.fire({
+                        icon: 'error',
+                        title : 'Please!',
+                        animation:true,
+                        text: 'Bank of Name are Exists',
+                    })
+                }
+            }
+            console.log(this.BankInfo)
+            console.log(this.obj.bankdeposit)
         },
+        ...mapActions(["GetAccounts"]),
+        // getBankIndo(){
+        //     axios.get(`api/bankcards`).then((res)=>{
+        //     console.log(res.data.length == 0)
+        //             this.BankInfo = res.data
+        //             console.log('bankinfo',this.BankInfo)
+        // })
+        // },
 
-        HandleEdit(item){
+        openBankcard() {
+          
+            this.dialogBankCard = true;
+            this.title = 'Add'
+        },
+        returnBankCard(val) {
+           
+            this.dialogBankCard = val;
+        },
+        submitBank(){
             
-            this.AddData = {...item}
-            this.title = "Edit"
-            this.AddDialog = true
-            console.log(this.AddData)
-        },
-
-        SAVE(){
+            var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation : false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar : true,
+                dibOpen : (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
             if(this.title == 'Add'){
-                axios.post('api/account/store',this.AddData).then((res)=>{
-                if(res.data){
-                    this.AddData = {}
-                    this.AddDialog = false
-                    alert('pasok')
-                    this.GetAccounts()
+                console.log('start1')
+                if(this.obj.name){
+                if(this.obj.phonenumber){
+                    if(this.obj.bankdeposit){
+                        // if(this.obj.depositbranch){
+                            if(this.obj.bankaccount){
+                                if(this.obj.ifsc){
+                                    let check = this.BankInfo.filter((rec)=>{
+                                            return (rec.bankdeposit == this.obj.bankdeposit);
+                                        });//end of filter
+                                        if(check.length > 0){
+                                            toastMixin.fire({
+                                            icon: 'error',
+                                            title : 'Please!',
+                                            animation:true,
+                                            text: 'Bank of Name Already Exists',
+                                            })
+                                            return false;
+                                        }//end of trappings
+                                    this.obj.UserID = this.loggedInUser.id;
+                                        axios.post("api/bankcard/store", this.obj).then((res) => {
+                                        this.obj = {};
+                                        this.dialogBankCard = false;
+                                        toastMixin.fire({
+                                            icon: 'success',
+                                            title : 'Susscessful!',
+                                            animation:true,
+                                            text: 'Successfully added',
+                                        })
+                                        this.getBankInfo();
+                                        });
+                                   
+                                }else{
+                                    toastMixin.fire({
+                                    icon: 'error',
+                                    title : 'Please!',
+                                    animation:true,
+                                    text: 'Please Input your IFSC!',
+                                    })
+                                }
+                               
+                            }else{
+                                toastMixin.fire({
+                                icon: 'error',
+                                title : 'Please!',
+                                animation:true,
+                                text: 'Please Input your Bank Account!',
+                                })
+                            }
+                          
+                        // }else{
+                        //     toastMixin.fire({
+                        //     icon: 'error',
+                        //     title : 'Please!',
+                        //     animation:true,
+                        //     text: 'Please Input your Bank Branch!',
+                        //     })
+                        // }
+                    }else{
+                        toastMixin.fire({
+                        icon: 'error',
+                        title : 'Please!',
+                        animation:true,
+                        text: 'Please Input your Bank!',
+                        })
+                    }
+                }else{
+                    toastMixin.fire({
+                    icon: 'error',
+                    title : 'Please!',
+                    animation:true,
+                    text: 'Please Input your Number!',
+                    })
                 }
-            })
             }else{
-                axios.post(`api/account/update/${this.AddData.id}`,this.AddData).then((res)=>{
-                if(res.data){
-                    this.AddData = {}
-                    this.AddDialog = false
-                    alert('pasok')
-                    this.GetAccounts()
-                }
-            })
+                toastMixin.fire({
+                    icon: 'error',
+                    title : 'Please!',
+                    animation:true,
+                    text: 'Please Input your name!',
+                })
+            }
+            }else if(this.title == 'Edit'){
+                // console.log('pasok')
+                this.obj.UserID = this.loggedInUser.id;
+                console.log('pasok',this.obj)
+                axios.post(`api/bankcard/update`, this.obj).then((res) => {
+                this.obj = {};
+                this.dialogBankCard = false;
+                toastMixin.fire({
+                    icon: 'success',
+                    title : 'Susscessful!',
+                    animation:true,
+                    text: 'Successfully Updated',
+                })
+                this.getBankInfo();
+                });
             }
             
+           
+        },
+        GotoRecharge(){
+        this.$router.push("/DepositView");
+        },
+        GotoWithdrawal(){
+        this.$router.push("/Withdrawal");
+        },
+        Home(){
+        this.$router.push('/')
+        },
+        Center(){
+        this.$router.push('/AccountInfo')
+        },
+        Order(){
+        this.$router.push('/Order')
+        },
+        BankCard(){
+        this.$router.push("/BankCard");
         },
 
-        onlyNumber($event) {
+    getBankInfo(){
+        axios.get(`api/bankcards/${this.loggedInUser.id}`).then((res)=>{
+            
+            this.BankInfo = res.data
+            console.log(this.BankInfo)
+            // for(let i = 0; i < this.BankInfo.length; i++){
+            //     this.checking = res.data[i]
+                
+            // }
+            // console.log(this.checking.ifsc)
+            // console.log(res.data[0].UserID)
+            // for(let i = 0; i < res.data.length; i++){
+                // if(res.data[i].UserID == this.loggedInUser.id ){
+                // this.BankInfo = res.data[i]
+                // console.log('bankinfo1',this.BankInfo)
+                // this.checking = res.data[i]
+                // }else{
+                //   this.checking = res.data[i]
+                // }
+            // }
+        })
+    },
+
+    Handle_Edit(item){
+        console.log(item)
+        this.obj = {...item}
+        this.dialogBankCard = true;
+        this.title = "Edit"
+
+    },
+
+    Handle_Delete(item){
+        var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation : false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar : true,
+                dibOpen : (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+        item.UserID = this.loggedInUser.id;
+                console.log('pasok',item)
+                axios.post(`api/bankcard/Delete`, item).then((res) => {
+                this.obj = {};
+                this.dialogBankCard = false;
+                toastMixin.fire({
+                    icon: 'success',
+                    title : 'Susscessful!',
+                    animation:true,
+                    text: 'Successfully Deleted',
+                })
+                this.getBankInfo();
+                location.reload();
+                });
+    },
+
+    onlyNumber($event) {
             let keyCode = $event.keyCode ? $event.keyCode : $event.which;
             if (keyCode < 48 || keyCode > 57) {
                 // 46 is dot
                 $event.preventDefault();
             }
         }, //END FOR ONLY NUMBER FUNCTION
-
-        Handleclose(){
-            this.AddDialog = false;
-            this.AddData = {};
-        },
-
-        Refresh(){
-            location.reload();
-        }
-    }
-}
+    },
+};
 </script>
 
 <style scoped>
-tbody,
-th,
-thead,
-tr,
-td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    font-weight: bold;
-    
-}
-th {
-    background-color: #cfd8dc !important;
-    font-weight: bold !important;
-    text-align: center !important;
-    color: black!important;
+.custom-text-field input,
+.custom-text-field .v-input__control,
+.custom-text-field .v-text-field__slot {
+  border-bottom-color: red; /* Change the line color as desired */
 }
 
+.home {
+    overflow: auto;
+    height: 800px !important;
+    max-width: 100%;
+    margin: auto;
+}
+
+.user-id {
+    color: #676767;
+    font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue,
+        STHeiti, Microsoft Yahei, Tahoma, Simsun, sans-serif;
+}
+
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue,
+        STHeiti, Microsoft Yahei, Tahoma, Simsun, sans-serif;
+}
+
+.amount {
+    font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue,
+        STHeiti, Microsoft Yahei, Tahoma, Simsun, sans-serif;
+    text-indent: 10px;
+    line-height: 40px;
+    text-align: left;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999;
+}
+
+@media (max-width: 600px) {
+    .footer {
+        padding: 10px;
+    }
+}
 </style>
