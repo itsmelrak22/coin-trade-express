@@ -52,43 +52,42 @@
                                         }}</span
                                         
                                     >
-          
                                     </v-col>
                             </v-row>
-                            <v-row>
-                            <v-col><span>{{item.contract}}</span><br/></v-col>
-                            <v-col><span>Amount</span><br/></v-col>
-                            <v-col><span>Close Price </span><br/></v-col>
+                            <v-row no-gutters>
+                            <v-col no-gutters class="text-center"><span><b>{{item.contract}}</b></span><br/></v-col>
+                            <v-col no-gutters class="text-center"><span><b>Amount</b> </span><br/></v-col>
+                            <v-col no-gutters class="text-center"><span><b>Close Price</b>  </span><br/></v-col>
                         
                             </v-row>
                     
                             <v-row>
-                            <v-col>BTC/USDT</v-col>
-                            <v-col>{{item.quantity}}.000000</v-col>
-                            <v-col>{{item.closing_price}} </v-col>
+                            <v-col no-gutters class="text-center">BTC/USDT</v-col>
+                            <v-col no-gutters class="text-center">{{item.quantity}}.000000</v-col>
+                            <v-col no-gutters class="text-center">{{item.closing_price}} </v-col>
                             </v-row>
                             <v-row>
-                            <v-col><span>time</span><br/></v-col>
-                            <v-col><span>P/L[BTC]</span><br/></v-col>
-                            <v-col><span>status </span><br/></v-col>
-                            <v-col><span>Preset </span><br/></v-col>
+                            <v-col no-gutters class="text-center"><span><b>time</b> </span><br/></v-col>
+                            <v-col no-gutters class="text-center"><span><b>P/L[BTC]</b> </span><br/></v-col>
+                            <v-col no-gutters class="text-center"><span><b>Status</b>  </span><br/></v-col>
+                            <!-- <v-col no-gutters class="text-center"><span><b>Preset</b>  </span><br/></v-col> -->
                         
                             </v-row>
                     
-                            <v-row>
-                            <v-col>{{item.seconds}}Sec</v-col>
-                            <v-col>{{item.profit}}</v-col>
-                            <v-col>{{item.trading}}</v-col>
-                            <v-col><span
+                            <v-row no-gutters>
+                            <v-col no-gutters class="text-center">{{item.seconds}}Sec</v-col>
+                            <v-col no-gutters class="text-center">{{item.profit}}</v-col>
+                            <v-col no-gutters class="text-center">{{item.trading}}</v-col>
+                            <!-- <v-col class="text-center"><span
                                 :style="
                                     item.preset == 'Lost'   ? 'font-weight:bold;color: #B31312'  : 'font-weight:bold;color:#609966 '
                                 "
                                 >{{item.preset}}</span
-                            ></v-col>
+                            ></v-col> -->
                             </v-row>
                             <v-row>
                                 
-                            <v-col style="color:white" class="text-right">{{item.counting <= 0 ? 'closed':item.counting}}</v-col>
+                            <v-col  class="text-right">{{item.counting <= 0 ? 'closed':item.counting}}</v-col>
                             </v-row>
                         </v-card-text>
                     </v-card>
@@ -187,16 +186,37 @@ export default {
         },2000 );
             },
             updateTradingValue(item) {
+                var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation : false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar : true,
+                dibOpen : (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
                 console.log('item',item)
                 item.result = parseFloat(item.quantity) + parseFloat(item.profit);
                 console.log('item dto sa order',item)
-                axios.post(`api/calculateCount`, item).then((response) => {
-                        this.getTradeOrder(); 
+                axios.post(`api/calculateCount`, item).then((res) => {
                         //admin win or loost bawas o dagdag ng pera
-
                 axios.post(`api/adminprocess`,item).then((res)=>{
+                    setTimeout(() => {
+                        getTradeOrder();
+                        toastMixin.fire({
+                        icon: 'success',
+                        title : 'Your Bet is Susscessful Done!',
+                        animation:true,
+                        text: 'Successfully Done',
+                    })
+                    }, 2000);
                 })
-
+                this.getTradeOrder(); 
                     })
                     .catch((error) => {
                     console.error(error);

@@ -10,7 +10,7 @@
                     </v-card-title>
                   </v-card>
 
-                <v-card flat  max-height="55%">
+                <v-card flat>
                     <v-card-title>
                         <h1 :style="details.change > 0 ? 'color:Green;' : 'color:red;' ">
                             {{ details.now_price }}000
@@ -149,19 +149,19 @@
             <v-card style="overflow-y: auto"  :height="$vuetify.breakpoint.height - 400">
                 <v-card-text>
                     <v-row>
-                    <v-col>
+                    <v-col class="ml-5">
                         <span style="font-size: 14px">Product Name</span><br />
                         <span>Direction</span><br />
                         <span>Current Price</span><br />
                     </v-col>
-                    <v-col class="text-right">
-                        <span class="text-right"> {{ obj.symbolDisplayName }}</span><br />
-                        <span> {{ obj.direction }}</span><br />
-                        <span class="text-right"> {{ obj.close }}</span><br />
+                    <v-col class="text-right mr-5">
+                        <span class="text-right mr-5"> {{ obj.symbolDisplayName }}</span><br />
+                        <span class="text-right mr-5"> {{ obj.direction }}</span><br />
+                        <span class="text-right mr-5"> {{ obj.close }}</span><br />
                     </v-col>
                     </v-row>
                     <v-row>
-                    <v-col>
+                    <v-col class="ml-5">
                         <h3
                         style="
                             color: black;
@@ -176,18 +176,18 @@
                         <v-sheet
                             rounded="lg"
                             class="text-center pt-1 px-1 mr-1"
-                            @click="discount = 0.6"
+                            @click="discount = 0.60"
                             :style="{
                             width: '120px',
-                            'background-color': discount === 0.6 ? '#178BF6' : '#F8F8F9',
+                            'background-color': discount === 0.60 ? '#178BF6' : '#F8F8F9',
                             }"
                         >
                             <v-sheet
                             rounded="lg"
                             class="text-center mb-5"
                             :style="{
-                                color: discount === 0.6 ? 'white' : '#676767',
-                                'background-color': discount === 0.6 ? '#2492f8fa' : '#F2F2F2',
+                                color: discount === 0.60 ? 'white' : '#676767',
+                                'background-color': discount === 0.60 ? '#2492f8fa' : '#F2F2F2',
                             }"
                             >
                             <span>Time</span>
@@ -196,25 +196,25 @@
                             >60S</span
                             >
         
-                            <span :style="{ color: discount === 0.6 ? 'white' : '#676767' }"
+                            <span :style="{ color: discount === 0.60 ? 'white' : '#676767' }"
                             >Scale:60.00%</span
                             >
                         </v-sheet>
                         <v-sheet
                             rounded="lg"
                             class="text-center pt-1 px-1 mr-1"
-                            @click="discount = 0.4"
+                            @click="discount = 0.40"
                             :style="{
                             width: '120px',
-                            'background-color': discount === 0.4 ? '#178BF6' : '#F8F8F9',
+                            'background-color': discount === 0.40 ? '#178BF6' : '#F8F8F9',
                             }"
                         >
                             <v-sheet
                             rounded="lg"
                             class="text-center mb-5"
                             :style="{
-                                color: discount === 0.4 ? 'white' : '#676767',
-                                'background-color': discount === 0.4 ? '#2492f8fa' : '#F2F2F2',
+                                color: discount === 0.40 ? 'white' : '#676767',
+                                'background-color': discount === 0.40 ? '#2492f8fa' : '#F2F2F2',
                             }"
                             >
                             <span>Time</span>
@@ -223,25 +223,25 @@
                             >120S</span
                             >
         
-                            <span :style="{ color: discount === 0.4 ? 'white' : '#676767' }"
+                            <span :style="{ color: discount === 0.40 ? 'white' : '#676767' }"
                             >Scale:40.00%</span
                             >
                         </v-sheet>
                         <v-sheet
                             rounded="lg"
                             class="text-center pt-1 px-1 mr-1"
-                            @click="discount = 0.3"
+                            @click="discount = 0.30"
                             :style="{
                             width: '120px',
-                            'background-color': discount === 0.3 ? '#178BF6' : '#F8F8F9',
+                            'background-color': discount === 0.30 ? '#178BF6' : '#F8F8F9',
                             }"
                         >
                             <v-sheet
                             rounded="lg"
                             class="text-center mb-5"
                             :style="{
-                                color: discount === 0.3 ? 'white' : '#676767',
-                                'background-color': discount === 0.3 ? '#2492f8fa' : '#F2F2F2',
+                                color: discount === 0.30 ? 'white' : '#676767',
+                                'background-color': discount === 0.30 ? '#2492f8fa' : '#F2F2F2',
                             }"
                             >
                             <span>Time</span>
@@ -250,7 +250,7 @@
                             >180S</span
                             >
         
-                            <span :style="{ color: discount === 0.3 ? 'white' : '#676767' }"
+                            <span :style="{ color: discount === 0.30 ? 'white' : '#676767' }"
                             >Scale:30.00%</span
                             >
                         </v-sheet>
@@ -258,7 +258,7 @@
                     </v-col>
                     </v-row>
                     <v-row>
-                    <v-col>
+                    <v-col class="ml-5">
                         <p>Investment Amount</p><br />
                         <v-text-field
                         placeholder="Minimun Purchase Limit 100"
@@ -270,21 +270,21 @@
                     </v-col>
                     </v-row>
                     <v-row>
-                    <v-col>
+                    <v-col class="ml-5">
                         <span>Available Balance</span><br />
                         <span>Expected Earnings</span><br />
                     </v-col>
-                    <v-col class="text-right">
-                        <span> {{ Account.Asset }}</span>
+                    <v-col class="text-right mr-5" >
+                        <span class="text-right mr-5"> {{ Account.Asset }}</span>
                         <br />
                         
-                        <span class="text-right " v-if="obj.recharge == 0">
+                        <span class="text-right mr-5" v-if="obj.recharge == 0">
                         {{obj.recharge ==  0 ? 0 : 
-                            (obj.profit = parseInt(obj.recharge)  * parseInt(discount) + parseInt(obj.recharge))
+                            obj.profit = (parseFloat(obj.recharge)  + parseFloat(discount) * parseFloat(obj.recharge)).toFixed(2)
                         }} </span>
-                        <span class="text-right " v-else>
+                        <span class="text-right mr-5 " v-else>
                             {{obj.recharge ==  null ? 0 : 
-                                (obj.profit = parseInt(obj.recharge)  * parseInt(discount) + parseInt(obj.recharge))
+                                obj.profit = (parseFloat(obj.recharge)  + parseFloat(discount) * parseFloat(obj.recharge)).toFixed(2)
                             }} </span>
 
                         
@@ -334,7 +334,7 @@ export default {
         getamount: [],
         obj: {},
         recharge: 0,
-        discount: 0.6,
+        discount: 0.60,
         now: "",
         sheet: false,
         errors: [],
@@ -393,6 +393,7 @@ export default {
 
         backMain(){
             this.$router.push("/");
+            location.reload();
         } ,
         ...mapActions(["GetAccounts"]),
         GetDetails() {
@@ -767,6 +768,46 @@ th {
     .v-simple-table {
       /* Default table width for larger screens */
       width: 60%;
+    }
+  }
+
+  @media only screen and (min-width: 1025px) and (max-width: 1280px) {
+    .main {
+      /* Adjust styles for screens with width between 1025px and 1280px */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .main .v-card {
+      width: 70%;
+      max-height: 60vh; /* Adjust the height as needed */
+    }
+  
+    .v-simple-table {
+      /* Adjust table width for screens with width between 1025px and 1280px */
+      width: 70%;
+      max-height: 40vh; /* Adjust the height as needed */
+    }
+  }
+
+  @media only screen and (min-width: 1281px) and (max-width: 1920px) {
+    .main {
+      /* Adjust styles for screens with width between 1281px and 1920px */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .main .v-card {
+      width: 80%;
+      max-height: 65vh; /* Adjust the height as needed */
+    }
+  
+    .v-simple-table {
+      /* Adjust table width for screens with width between 1281px and 1920px */
+      width: 80%;
+      max-height: 50vh; /* Adjust the height as needed */
     }
   }
 </style>

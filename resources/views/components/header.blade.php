@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset(mix('css/app.css'))}}">
     
-    <title>COIN TRADE EXPRESS</title>
+    <title>Crypto</title>
 
     <style>
         html { overflow-y: initial !important; }

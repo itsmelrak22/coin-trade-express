@@ -153,6 +153,7 @@
 
 <script>
 import Sparkline from './Sparkline.vue'
+import { getTradeOrder } from '../tradeOrderService';
 export default {
     
     data:()=>({
@@ -173,7 +174,8 @@ export default {
     }),
 
     created(){
-        
+      const loggedInUserId = this.loggedInUser.id
+       getTradeOrder(loggedInUserId);
       this.GetTradeDetails();
       setInterval(() => { this.GetTradeDetails();}, 5000);
         
@@ -213,6 +215,7 @@ export default {
           console.log('value',value)
           this.$store.commit("STORE_TRADING", value);
           this.$router.push("/ViewTrade");
+          
           // const url = `hello/ViewTrade`;
           // open(url);
           // window.open(`hello/ViewTrade`)

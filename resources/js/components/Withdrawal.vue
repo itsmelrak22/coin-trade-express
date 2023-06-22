@@ -83,6 +83,8 @@
 <script>
 import moment from "moment";
 import Swal from "sweetalert2";
+import { getTradeOrder } from '../tradeOrderService';
+import { mapActions, mapState } from "vuex";
 export default {
     data:()=>({
         bankdeposit_arr:[
@@ -106,10 +108,15 @@ export default {
     }),
 
     created(){
+        const loggedInUserId = this.loggedInUser.id
+        getTradeOrder(loggedInUserId);
         this.getBankInfo()
         this.GetUser()
         // this.GetInfo()
         // this.loadLastID()
+    },
+    computed: {
+        ...mapState(["loggedInUser"]),
     },
 
     methods:{
@@ -119,6 +126,13 @@ export default {
         },
 
         SAVE(){
+            axios.post(`/api/user/update2/${this.loggedInUser.id}`,{Amount:'0'}).then((res)=>{
+                    if(res.data){
+                  this.totalmoney = '0';
+                  this.GetUser();
+                  this.obj={};
+                    }
+                })
             var toastMixin = Swal.mixin({
                 toast: true,
                 icon: 'success',
