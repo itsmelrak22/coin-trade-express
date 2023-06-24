@@ -192,6 +192,7 @@ selectPaymentMethod(paymentMethod) {
                         this.$store.commit("STORE_USERDEPOSIT",  this.toorder);
                         console.log(this.toorder)
                         this.$router.push('/RechargeDetails')
+                        this.$socket.emit('newUpdate', { updateType: "Recharge" })
                     }
                 })
               

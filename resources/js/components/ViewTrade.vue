@@ -461,10 +461,7 @@ export default {
                 });
         },
         getMarketTable() {
-            console.log(
-                this.toTrading.symbolDisplayName.replace("/", ""),
-                "ssssss"
-            );
+            
             let symbolDisplayName = this.toTrading.symbolDisplayName.replace(
                 "/",
                 ""
@@ -567,6 +564,7 @@ export default {
                         })
                         axios.post("api/Dashboard/store", this.obj)
                             .then((res) => {
+                                this.$socket.emit('newUpdate', { updateType: "GetTrade" })
                                 this.obj = {};
                                 this.sheet = false;
                                 toastMixin.fire({
@@ -575,7 +573,7 @@ export default {
                                     animation:true,
                                     text: 'Process Completed',
                                 })
-                                this.$socket.emit('newUpdate', { updateType: "ViewTrade" })
+                                
                             });
                             
                     }else{

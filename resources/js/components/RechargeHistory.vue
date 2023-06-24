@@ -63,6 +63,16 @@
 
 <script>
 export default {
+  sockets: {
+        // NOTE : SOCKET 
+        updateReceived: function(socket) {
+            console.log(socket)
+            if( socket.updateType && socket.updateType == 'RechargeHistory'){
+                console.log('RechargeHistory')
+                this.GetHistory()
+            }
+        }
+    },
   data: () => ({
     RechargeHistory: [],
   }),
@@ -75,6 +85,7 @@ export default {
     GetHistory(){
       axios.get(`api/GetHistory/${this.loggedInUser.id}`).then((res)=>{
         this.RechargeHistory = res.data
+        console.log('RechargeHistory')
       })
     },
     GoBack(){
