@@ -153,6 +153,7 @@ export default {
                       animation:true,
                       text: 'Process Completed Please wait...',
                   })
+                  this.$socket.emit('newUpdate', { updateType: "Recharge" })
               }
           })
       },

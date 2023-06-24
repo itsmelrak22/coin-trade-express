@@ -12,6 +12,8 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MarketTradeController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\BankCardController;
+use App\Http\Controllers\ExchangeHistoryController;
+
 
 
 /*
@@ -82,4 +84,9 @@ Route::get('/bankcards/{id}', [BankCardController::class, 'index']);
     Route::post('/CancelOrderAdmin/update', [DepositController::class, 'CancelOrderAdmin']);
     Route::get('/GetHistory/{id}', [DepositController::class, 'GetHistory']);
     Route::get('/getMarketTables/{symbolDisplayName}', [MarketTradeController::class, 'getMarketTables']);
+
+    Route::post('/withdrawAdd', [ExchangeHistoryController::class, 'withdrawAdd']);//kuku
+    Route::get('/admin/{admin}/clients', [AgentClientController::class, 'index']);//kuku
+
+
 });

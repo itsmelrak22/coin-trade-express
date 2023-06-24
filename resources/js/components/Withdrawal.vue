@@ -12,7 +12,7 @@
                 <center>My Credit Score: {{totalmoney}}</center>
                 <v-card flat >
                     <v-card-text>
-                        <span>Bank of Deposit:</span>
+                        <span>Bank of Deposit *:</span>
                         <v-autocomplete 
                         clearable
                         @change="GetInfo()"
@@ -62,9 +62,9 @@
                         disabled
                         ></v-text-field>
 
-                        <span>Amount Withdraw:</span>
+                        <span>Amount Withdraw *:</span>
                         <v-text-field
-                        
+                        v-model="obj.amount2"
                         outlined
                         dense
                         ></v-text-field>
@@ -81,7 +81,6 @@
 </template>
 
 <script>
-import moment from "moment";
 import Swal from "sweetalert2";
 import { getTradeOrder } from '../tradeOrderService';
 import { mapActions, mapState } from "vuex";
@@ -126,13 +125,6 @@ export default {
         },
 
         SAVE(){
-            axios.post(`/api/user/update2/${this.loggedInUser.id}`,{Amount:'0'}).then((res)=>{
-                    if(res.data){
-                  this.totalmoney = '0';
-                  this.GetUser();
-                  this.obj={};
-                    }
-                })
             var toastMixin = Swal.mixin({
                 toast: true,
                 icon: 'success',
@@ -148,26 +140,57 @@ export default {
                 }
             })
 
-             toastMixin.fire({
+        if(this.obj.bankdeposit){
+            if(this.obj.amount2){
+                if(this.obj.amount2 == this.totalmoney){
+
+                
+                this.obj.id = String(this.loggedInUser.id)
+                console.log(this.Account.id,'s')
+                this.Account.Amount2 = this.obj.amount2
+                this.Account.prev_Asset =  this.totalmoney ;
+                this.Account.Amount = '0'
+                
+                axios.post("api/withdrawAdd", this.Account)//kuku
+                                .then((res) => {
+                axios.post(`api/user/update2/${this.Account.id}`,this.Account).then((res)=>{
+                    
+                                    this.GetUser()
+                                    this.obj = {};
+                                    toastMixin.fire({
+                                        icon: 'error',
+                                        title : 'Please!',
+                                        animation:true,
+                                        text: 'Please Finish your Task Before you Withdraw...',
+                                    })
+                    this.$socket.emit('newUpdate', { updateType: "ConfirmRecharge" })
+                })
+                });
+                }else{
+                    toastMixin.fire({
+                        icon: 'error',
+                        title : 'Please!',
+                        animation:true,
+                        text: 'Your Balance is Not enough to Withdraw!',
+                    })
+                    }
+            }else{
+                toastMixin.fire({
                 icon: 'error',
                 title : 'Please!',
                 animation:true,
-                text: 'Please Finish your Task Before you Withdraw...',
+                text: 'Please fill out all required fields',
             })
-            // if(this.totalmoney < this.obj.amountwithdraw){
-            //     alert('masmalaki ung withdraw mo')
-            // }else{
-               
-            //     this.obj.ordernumber = `EE${moment().format("YYYYMMDD")}-${this.GenerateORDERID(this.LastWithdrawalID)}`
-            //     this.obj.UserID = this.loggedInUser.id
-            //     console.log(this.obj)
-            //     axios.post(`api/withdraw/store`).then((res)=>{
-            //         console.log(res.data)
-            //     })
-            // }
-            
+            }
+        }else{
+            toastMixin.fire({
+                icon: 'error',
+                title : 'Please!',
+                animation:true,
+                text: 'Please fill out all required fields',
+            })
+        }    
         },
-
         getBankInfo(){
             var toastMixin = Swal.mixin({
                 toast: true,

@@ -188,7 +188,9 @@ class DepositController extends Controller
     public function GetHistory($empcode)
     {
         
-        return Deposit::select('deposits.*')->where('UserID', '=', $empcode)->get();
+        return Deposit::select('deposits.*')->where('UserID', '=', $empcode)
+        ->orderBy('created_at', 'desc')->get();
+        // return Deposit::orderBy('created_at', 'desc')->get();
      
     }
 }

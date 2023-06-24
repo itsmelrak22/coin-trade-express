@@ -120,6 +120,11 @@ class UserController extends Controller
         }
     }
 
+    public function UpdateDrawAsset(Request $request)
+    {
+        return dd($request);
+    }
+
     public function BetDeduction(Request $request)
     {
         // return dd($request);

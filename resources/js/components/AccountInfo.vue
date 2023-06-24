@@ -15,7 +15,9 @@
           <span>Asset Center</span>
           <br>
           <span style="color: #f09e23;">=</span>
-          <span class="amount" style="font-size: 45px; font-weight: bold; color: #f09e23;">{{ Account.Asset }}.00</span>
+          <span v-if="this.Account.Asset == 0" class="amount" style="font-size: 45px; font-weight: bold; color: #f09e23;">0.00</span>
+          <span v-else-if="this.Account.Asset == null" class="amount" style="font-size: 45px; font-weight: bold; color: #f09e23;">0.00</span>
+          <span v-else class="amount" style="font-size: 45px; font-weight: bold; color: #f09e23;">{{ Account.Asset }}</span>
           <v-row>
             <v-col cols="12" sm="6">
               <v-btn block color="success" class="ml-2" style="border-radius:10px" @click="GotoRecharge()">
@@ -116,8 +118,20 @@
 </template>
 
 <script>
-import { getTradeOrder } from '../tradeOrderService';
+// import { getTradeOrder } from '../tradeOrderService';
+import moment from "moment";
+import Swal from "sweetalert2";
 export default {
+  sockets: {
+        // NOTE : SOCKET 
+        updateReceived: function(socket) {
+            console.log(socket)
+            if( socket.updateType && socket.updateType == 'ConfirmRecharge'){
+                console.log('getData')
+                  this.GetUser()
+            }
+        }
+    },
 
   data:()=>({
     Account : [],
@@ -126,44 +140,54 @@ export default {
 
   created(){
      
-       this.GetUserMain()
+      //  this.GetUserMain()
+      this.getTradeOrder()
        this.GetUser()
       
        
-       const loggedInUserId = this.loggedInUser.id
-       getTradeOrder(loggedInUserId);
+      //  const loggedInUserId = this.loggedInUser.id
+      //  getTradeOrder(loggedInUserId);
+       
     },
     
 
     methods:{
 
       GetUser(){
-        let interval = setInterval(() => { 
-          console.log('interval',this.ASSET !=  this.Account.Asset)
-          if(this.ASSET !=  this.Account.Asset){
-            clearInterval(interval);
-          }else{
-            axios.get(`/api/AccountInfo`).then((res) => {
-          for(let i = 0; i < res.data.length; i++){
-            if(this.loggedInUser.id == res.data[i].id){
-              this.Account = res.data[i];
-            }
-          }
-          });
-          }
-        }, 5000);
-      },
-
-      GetUserMain(){
         axios.get(`/api/AccountInfo`).then((res) => {
           for(let i = 0; i < res.data.length; i++){
             if(this.loggedInUser.id == res.data[i].id){
-              this.Account = res.data[i]
-              this.$store.commit("STORE_ASSET", this.Account.Asset);
+              this.Account = res.data[i];
+              console.log('gethere',this.Account)
             }
           }
-        });
-    },
+          });
+        // let interval = setInterval(() => { 
+        //   console.log('interval',this.ASSET !=  this.Account.Asset)
+        //   if(this.ASSET !=  this.Account.Asset){
+        //     clearInterval(interval);
+        //   }else{
+        //     axios.get(`/api/AccountInfo`).then((res) => {
+        //   for(let i = 0; i < res.data.length; i++){
+        //     if(this.loggedInUser.id == res.data[i].id){
+        //       this.Account = res.data[i];
+        //     }
+        //   }
+        //   });
+        //   }
+        // }, 5000);
+      },
+
+    //   GetUserMain(){
+    //     axios.get(`/api/AccountInfo`).then((res) => {
+    //       for(let i = 0; i < res.data.length; i++){
+    //         if(this.loggedInUser.id == res.data[i].id){
+    //           this.Account = res.data[i]
+    //           this.$store.commit("STORE_ASSET", this.Account.Asset);
+    //         }
+    //       }
+    //     });
+    // },
     GotoRecharge(){
       this.$router.push("/DepositView");
       location.reload();
@@ -191,7 +215,87 @@ export default {
     },
     GotoRechargeHistory(){
       this.$router.push("/RechargeHistory");
-    }
+    },
+
+
+          //++++++++++++++++++++++++++++++++Sample +++++++++++++++++++++++++++++++++++++
+          getTradeOrder() {
+        let interval= setInterval(() => {
+            // if(this.functionName != 'Transaction'){
+            //     clearInterval(interval)
+            // }
+            axios.get(`api/TradeOrders/${this.loggedInUser.id}`).then((res) => {
+                            this.gettradeorders = res.data
+                        
+                            if(this.gettradeorders[0].trading == 'closed'){
+                                clearInterval(interval)
+                            }
+                            console.log('sa order',this.gettradeorders)
+                                this.gettradeorders.forEach((item,index) => {
+                                    let daycut = moment().format("YYYY-MM-DD HH:mm:ss");
+                                    let string = daycut;
+                                    let targetMoment1 = moment(`${string}`);
+                                    let targetMoment2 = moment(`${item.closing_time}`);
+                                    let diffInSeconds = targetMoment2.diff(targetMoment1, "seconds");
+                                    
+                                    item.counting = diffInSeconds +1;
+                                    // console.log(item.counting)
+                                    
+                                    // let interval = setInterval(() => {
+                                    if ( item.counting == 0) {
+                                        console.log('1')
+                                        clearInterval(interval);
+                                        this.updateTradingValue(item);
+                                    }else if(item.counting <= 0 && item.trading === 'pending'){
+                                        console.log('2')
+                                        clearInterval(interval);
+                                        this.updateTradingValue(item);
+                                    }
+                                    item.counting--;
+                            })
+            });
+        },2000 );
+            },
+            updateTradingValue(item) {
+                var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation : false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar : true,
+                dibOpen : (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+                console.log('item',item)
+                item.result = parseFloat(item.quantity) + parseFloat(item.profit);
+                console.log('item dto sa order',item)
+                axios.post(`api/calculateCount`, item).then((res) => {
+                        //admin win or loost bawas o dagdag ng pera
+                axios.post(`api/adminprocess`,item).then((res)=>{
+                    setTimeout(() => {
+                        // this.getTradeOrder();
+                        toastMixin.fire({
+                        icon: 'success',
+                        title : 'Your Bet is Susscessful Done!',
+                        animation:true,
+                        text: 'Successfully Done',
+                    })
+                    this.$socket.emit('newUpdate', { updateType: "GetTrade" })
+                    this.$socket.emit('newUpdate', { updateType: "ProcessBet" })
+                    this.$socket.emit('newUpdate', { updateType: "ConfirmRecharge" })
+                    }, 2000);
+                })
+                // this.getTradeOrder(); 
+                    })
+                    .catch((error) => {
+                    console.error(error);
+                    });
+            },
     },
 }
 </script>
