@@ -13,14 +13,14 @@ import io from 'socket.io-client';
 import MyMixins from './MyMixins'
 
 
-const socket = io("http://31.220.31.202:5000");
+const socket = io("https://cointradeexpress.com:5000");
 
 Vue.prototype.$socket = socket;
 import VueSocketIO from 'vue-socket.io'
 
 Vue.use(new VueSocketIO({
     // debug: false,
-    connection: io('http://31.220.31.202:5000'), //options object is Optional
+    connection: io('https://cointradeexpress.com:5000'), //options object is Optional
     vuex: {
         store,
         actionPrefix: "SOCKET_",
