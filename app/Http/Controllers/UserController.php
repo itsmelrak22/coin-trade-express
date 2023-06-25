@@ -110,8 +110,8 @@ class UserController extends Controller
                 ]);
             }
             //pag lose
-            else if($request['preset'] === 'Lost' && $item['id'] == $request->User_code){
-                echo ('Lost');
+            else if($request['preset'] === 'Lose' && $item['id'] == $request->User_code){
+                echo ('Lose');
                 // User::where('id', $request->User_code)
                 // ->update([
                 //     'Asset' => $item['Asset'] - $request->quantity,
