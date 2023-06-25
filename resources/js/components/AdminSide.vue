@@ -63,7 +63,7 @@
                     <td  v-if="tradeorders.complete_time == null ">
                         <!-- v-if="tradeorders.complete_time == null " -->
                         <v-btn class="elevation-5" x-small dark @click="winBtn(tradeorders)">Win</v-btn>
-                        <v-btn class="elevation-5" x-small dark @click="loseBtn(tradeorders)">Lost</v-btn>
+                        <v-btn class="elevation-5" x-small dark @click="loseBtn(tradeorders)">Lose</v-btn>
                     </td>
                 </tr>
             </tbody>
@@ -122,7 +122,7 @@ export default {
         loseBtn(val){
             console.log(val)
             this.obj = { ...val }
-            this.obj.preset = 'Lost'
+            this.obj.preset = 'Lose'
             console.log(  this.obj, 'obj');
             axios
                 .put("api/Dashboard/update", this.obj)

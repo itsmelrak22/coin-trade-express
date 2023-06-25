@@ -82,7 +82,7 @@
                             <v-col no-gutters class="text-center">{{item.trading}}</v-col>
                             <v-col class="text-center"><span
                                 :style="
-                                    item.preset == 'Lost'   ? 'font-weight:bold;color: #B31312'  : 'font-weight:bold;color:#609966 '
+                                    item.preset == 'Lose'   ? 'font-weight:bold;color: #B31312'  : 'font-weight:bold;color:#609966 '
                                 "
                                 >{{item.preset}}</span
                             ></v-col>
@@ -141,86 +141,7 @@ import Swal from "sweetalert2";
 
 
 export default {
-    name: 'TradeOrders',
-    methods:{
-        getTradeOrder() {
-        let interval= setInterval(() => {
-            if(this.functionName != 'Transaction'){
-                clearInterval(interval)
-            }
-            axios.get(`api/TradeOrders/${this.loggedInUser.id}`).then((res) => {
-                            this.gettradeorders = res.data
-
-                            if(this.gettradeorders[0].trading == 'closed'){
-                                clearInterval(interval)
-                            }
-                            console.log('sa order',this.gettradeorders)
-                                this.gettradeorders.forEach((item,index) => {
-                                    let daycut = moment().format("YYYY-MM-DD HH:mm:ss");
-                                    let string = daycut;
-                                    let targetMoment1 = moment(`${string}`);
-                                    let targetMoment2 = moment(`${item.closing_time}`);
-                                    let diffInSeconds = targetMoment2.diff(targetMoment1, "seconds");
-                                    
-                                    item.counting = diffInSeconds +1;
-                                    // console.log(item.counting)
-                                    
-                                    // let interval = setInterval(() => {
-                                    if ( item.counting == 0) {
-                                        console.log('1')
-                                        clearInterval(interval);
-                                        this.updateTradingValue(item);
-                                    }else if(item.counting <= 0 && item.trading === 'pending'){
-                                        console.log('2')
-                                        clearInterval(interval);
-                                        this.updateTradingValue(item);
-                                    }
-                                    item.counting--;
-                            })
-            });
-        },2000 );
-            },
-            updateTradingValue(item) {
-                var toastMixin = Swal.mixin({
-                toast: true,
-                icon: 'success',
-                title: 'General Title',
-                animation : false,
-                position: 'top-right',
-                showConfirmButton: false,
-                timer: 1500,
-                timerProgressBar : true,
-                dibOpen : (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            })
-                console.log('item',item)
-                item.result = parseFloat(item.quantity) + parseFloat(item.profit);
-                console.log('item dto sa order',item)
-                axios.post(`api/calculateCount`, item).then((res) => {
-                        //admin win or loost bawas o dagdag ng pera
-                axios.post(`api/adminprocess`,item).then((res)=>{
-                    setTimeout(() => {
-                        // this.getTradeOrder();
-                        toastMixin.fire({
-                        icon: 'success',
-                        title : 'Your Bet is Susscessful Done!',
-                        animation:true,
-                        text: 'Successfully Done',
-                    })
-                    this.$socket.emit('newUpdate', { updateType: "GetTrade" })
-                    this.$socket.emit('newUpdate', { updateType: "ProcessBet" })
-                    this.$socket.emit('newUpdate', { updateType: "ConfirmRecharge" })
-                    }, 2000);
-                })
-                // this.getTradeOrder(); 
-                    })
-                    .catch((error) => {
-                    console.error(error);
-                    });
-            },
-    },
+  
     sockets: {
         // NOTE : SOCKET 
         updateReceived: function(socket) {
@@ -245,6 +166,7 @@ export default {
 
     
     methods: {
+
         getTradeOrder() {
         let interval= setInterval(() => {
             if(this.functionName != 'Transaction'){
@@ -304,7 +226,7 @@ export default {
                         //admin win or loost bawas o dagdag ng pera
                 axios.post(`api/adminprocess`,item).then((res)=>{
                     setTimeout(() => {
-                        // this.getTradeOrder();
+                        this.getTradeOrder();
                         toastMixin.fire({
                         icon: 'success',
                         title : 'Your Bet is Susscessful Done!',
@@ -316,12 +238,89 @@ export default {
                     this.$socket.emit('newUpdate', { updateType: "ConfirmRecharge" })
                     }, 2000);
                 })
-                // this.getTradeOrder(); 
+                this.getTradeOrder(); 
                     })
                     .catch((error) => {
                     console.error(error);
                     });
             },
+        // getTradeOrder() {
+        // let interval= setInterval(() => {
+        //     if(this.functionName != 'Transaction'){
+        //         clearInterval(interval)
+        //     }
+        //     axios.get(`api/TradeOrders/${this.loggedInUser.id}`).then((res) => {
+        //                     this.gettradeorders = res.data
+                        
+        //                     if(this.gettradeorders[0].trading == 'closed'){
+        //                         clearInterval(interval)
+        //                     }
+        //                     console.log('sa order',this.gettradeorders)
+        //                         this.gettradeorders.forEach((item,index) => {
+        //                             let daycut = moment().format("YYYY-MM-DD HH:mm:ss");
+        //                             let string = daycut;
+        //                             let targetMoment1 = moment(`${string}`);
+        //                             let targetMoment2 = moment(`${item.closing_time}`);
+        //                             let diffInSeconds = targetMoment2.diff(targetMoment1, "seconds");
+                                    
+        //                             item.counting = diffInSeconds +1;
+        //                             // console.log(item.counting)
+                                    
+        //                             // let interval = setInterval(() => {
+        //                             if ( item.counting == 0) {
+        //                                 console.log('1')
+        //                                 clearInterval(interval);
+        //                                 this.updateTradingValue(item);
+        //                             }else if(item.counting <= 0 && item.trading === 'pending'){
+        //                                 console.log('2')
+        //                                 clearInterval(interval);
+        //                                 this.updateTradingValue(item);
+        //                             }
+        //                             item.counting--;
+        //                     })
+        //     });
+        // },2000 );
+        //     },
+        //     updateTradingValue(item) {
+        //         var toastMixin = Swal.mixin({
+        //         toast: true,
+        //         icon: 'success',
+        //         title: 'General Title',
+        //         animation : false,
+        //         position: 'top-right',
+        //         showConfirmButton: false,
+        //         timer: 1500,
+        //         timerProgressBar : true,
+        //         dibOpen : (toast) => {
+        //         toast.addEventListener('mouseenter', Swal.stopTimer)
+        //         toast.addEventListener('mouseleave', Swal.resumeTimer)
+        //         }
+        //     })
+        //         console.log('item',item)
+        //         item.result = parseFloat(item.quantity) + parseFloat(item.profit);
+        //         console.log('item dto sa order',item)
+        //         axios.post(`api/calculateCount`, item).then((res) => {
+        //                 //admin win or loost bawas o dagdag ng pera
+        //         axios.post(`api/adminprocess`,item).then((res)=>{
+        //             setTimeout(() => {
+        //                 // this.getTradeOrder();
+        //                 toastMixin.fire({
+        //                 icon: 'success',
+        //                 title : 'Your Bet is Susscessful Done!',
+        //                 animation:true,
+        //                 text: 'Successfully Done',
+        //             })
+        //             this.$socket.emit('newUpdate', { updateType: "GetTrade" })
+        //             this.$socket.emit('newUpdate', { updateType: "ProcessBet" })
+        //             this.$socket.emit('newUpdate', { updateType: "ConfirmRecharge" })
+        //             }, 2000);
+        //         })
+        //         // this.getTradeOrder(); 
+        //             })
+        //             .catch((error) => {
+        //             console.error(error);
+        //             });
+        //     },
             Home(){
                 this.$router.push('/')
                 location.reload();
