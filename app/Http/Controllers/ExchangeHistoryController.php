@@ -123,7 +123,8 @@ class ExchangeHistoryController extends Controller
         $market->agent_id =$adminClients[0]->agent_id;
         $market->email = $request->email;
         $market->inviter_email = $adminClients[0]->email;
-        $market->Amount = $request->prev_Asset;
+        $market->Amount = $request->AmountExchange;
+        $market->remarks = $request->remarks;
         $market->Asset = '0';
         $market->prev_Asset = $request->prev_Asset;
         $market->invitation_code = $adminClients[0]->invitation_code;
