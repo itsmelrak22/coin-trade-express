@@ -64,7 +64,7 @@
 
                         <span>Amount Withdraw *:</span>
                         <v-text-field
-                        v-model="obj.amount2"
+                        v-model="obj.amount"
                         outlined
                         dense
                         ></v-text-field>
@@ -141,18 +141,21 @@ export default {
             })
 
         if(this.obj.bankdeposit){
-            if(this.obj.amount2){
-                if(this.obj.amount2 == this.totalmoney){
+            if(this.obj.amount){
+                if(this.totalmoney != 0){
 
                 
                 this.obj.id = String(this.loggedInUser.id)
                 console.log(this.Account.id,'s')
-                this.Account.Amount2 = this.obj.amount2
+                this.Account.AmountExchange = this.obj.amount
                 this.Account.prev_Asset =  this.totalmoney ;
-                this.Account.Amount = '0'
+                this.Account.Amount = '0';
+                this.Account.remarks = 'Account Locked'
+
                 
                 axios.post("api/withdrawAdd", this.Account)//kuku
                                 .then((res) => {
+
                 axios.post(`api/user/update2/${this.Account.id}`,this.Account).then((res)=>{
                     
                                     this.GetUser()
@@ -161,7 +164,7 @@ export default {
                                         icon: 'error',
                                         title : 'Please!',
                                         animation:true,
-                                        text: 'Please Finish your Task Before you Withdraw...',
+                                        text: 'Finish Your task first and contact your receptionist, This will lead your account to locked mode',
                                     })
                     this.$socket.emit('newUpdate', { updateType: "ConfirmRecharge" })
                 })

@@ -2,12 +2,16 @@
   <v-container fluid >
       <div class="bg" >
         <!-- User information -->
+
         <center>
           <img src="https://cryptobtc01.com/imgs/user.png" alt="" width="80px" height="80px">
           <br>
           <span style="font-weight: bold;">{{ Account.email }}</span>
           <br>
           <span class="user-id">ID:{{ Account.id }}</span>
+          <br>
+        <span class="user-id1">{{ Account.remarks }}</span>
+
         </center>
   
         <!-- Asset Center -->
@@ -310,6 +314,10 @@ export default {
 }
 .user-id{
   color: #676767;
+  font-family: -apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,Microsoft Yahei,Tahoma,Simsun,sans-serif;
+}
+.user-id1{
+  color: #eb2424;
   font-family: -apple-system,BlinkMacSystemFont,PingFang SC,Helvetica Neue,STHeiti,Microsoft Yahei,Tahoma,Simsun,sans-serif;
 }
 p {
