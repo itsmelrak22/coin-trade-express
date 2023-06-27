@@ -72,7 +72,7 @@
                             <v-col no-gutters class="text-center"><span><b>time</b> </span><br/></v-col>
                             <v-col no-gutters class="text-center"><span><b>P/L[BTC]</b> </span><br/></v-col>
                             <v-col no-gutters class="text-center"><span><b>Status</b>  </span><br/></v-col>
-                            <v-col no-gutters class="text-center"><span><b>Preset</b>  </span><br/></v-col>
+                            <v-col v-if="item.counting <= 0 " no-gutters class="text-center"><span><b>Preset</b>  </span><br/></v-col>
                         
                             </v-row>
                     
@@ -80,7 +80,7 @@
                             <v-col no-gutters class="text-center">{{item.seconds}}Sec</v-col>
                             <v-col no-gutters class="text-center">{{item.profit}}</v-col>
                             <v-col no-gutters class="text-center">{{item.trading}}</v-col>
-                            <v-col class="text-center"><span
+                            <v-col v-if="item.counting <= 0 " class="text-center"><span 
                                 :style="
                                     item.preset == 'Lose'   ? 'font-weight:bold;color: #B31312'  : 'font-weight:bold;color:#609966 '
                                 "
