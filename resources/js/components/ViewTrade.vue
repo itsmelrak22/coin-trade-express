@@ -5,15 +5,15 @@
                 <v-card flat>
                     <v-card-title style="background-color: #d7d3d3">
                       <v-btn @click="backMain()" plain><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
-                      <b>{{ details.symbolDisplayName }}</b>
-                      <b>{{ obj.counting }}</b>
+                      <b>{{ details.symbol }}</b>
+                      <b>{{ obj.count }}</b>
                     </v-card-title>
                   </v-card>
 
                 <v-card flat>
                     <v-card-title>
                         <h1 :style="details.change > 0 ? 'color:Green;' : 'color:red;' ">
-                            {{ details.now_price }}000
+                            {{ details.openPrice }}
                         </h1>
                         <v-chip color="error">{{ details.change }}%</v-chip>
                     </v-card-title>
@@ -37,17 +37,17 @@
                                 <tr>
                                     <td>
                                         <center>
-                                            {{ ticker.high }}
+                                            {{ ticker.highPrice }}
                                         </center>
                                     </td>
                                     <td>
                                         <center>
-                                            {{ ticker.low }}
+                                            {{ ticker.lowPrice }}
                                         </center>
                                     </td>
                                     <td>
                                         <center>
-                                            {{ ticker.vol }}
+                                            {{ ticker.volume }}
                                         </center>
                                     </td>
                                 </tr>
@@ -136,7 +136,7 @@
                         dark 
                         style="background-color: #d72015" 
                         block
-                        @click="upbtn(cryptos)"
+                        @click="downbtn(cryptos)"
                             >Down</v-btn
                         ></v-col
                     >
@@ -370,7 +370,7 @@ export default {
             let lastElement = this.getmarket_arr[this.getmarket_arr.length - 1];
             let countValue = lastElement.Count;
             
-            if (String(this.cryptos1[0].ticker.count) != countValue) {
+            if (String(this.cryptos1[0].count) != countValue) {
                 this.addMarketTable();
             }
         }, 10000);
@@ -398,53 +398,58 @@ export default {
             location.reload();
         } ,
         ...mapActions(["GetAccounts"]),
+
         GetDetails() {
-            axios
-                .get(`https://omicomadswork.com/api/currency/getTradeDetail`)
-                .then((res) => {
-                    this.SelectedCrpyto = res.data.result.detail;
-                    for (let i = 0; i < this.SelectedCrpyto.length; i++) {
-                        if (
-                            this.toTrading.match_id ==
-                            this.SelectedCrpyto[i].match_id
-                        ) {
-                            this.details = this.SelectedCrpyto[i];
-                            this.ticker = this.SelectedCrpyto[i].ticker;
-                            // console.log("detail", this.details);
-                            // console.log("ticker", this.ticker);
-                        }
-                    }
+                fetch(`https://data.binance.com/api/v3/ticker/24hr`).then((response)=>{
+                response.json().then((data)=>{
+                    
+                    console.log(data)
+                    
+                    this.SelectedCrpyto = data.filter((rec) => {
+                    return ['BTCUSDT', 'LTCUSDT', 'ETHUSDT','NEOUSDT' ,
+                            'IOTAUSDT' ,'BCHUSDT','SNTUSDT' ,'XRPUSDT' ,
+                            'DOGEUSDT','CHZUSDT','ETCUSDT','EOSUSDT','TRBUSDT',
+                            'WICCUSDT','HTUSDT'].includes(rec.symbol);
                 });
-        },
+                        for (let i = 0; i < this.SelectedCrpyto.length; i++) {
+                            if (this.toTrading.symbol == this.SelectedCrpyto[i].symbol) {
+                                this.details = this.SelectedCrpyto[i];
+                                this.ticker = this.SelectedCrpyto[i];
+                                console.log("detail", this.details);
+                                console.log("ticker", this.ticker);
+                            }
+                        }
+                }) 
+            })
+            },
 
         getTickers() {
-            const url1 =
-                "https://omicomadswork.com/api/currency/getTradeDetail";
-
-            axios
-                .get(url1)
+            fetch(`https://data.binance.com/api/v3/ticker/24hr`)
                 .then((response) => {
-                    this.cryptos1 = response.data.result.detail.filter((r)=>{return r.symbolDisplayName == this.toTrading.symbolDisplayName})
-                    // this.cryptos1= response.data.result.trade
-                 
-                    // console.log(   this.cryptos  )
-
-                    // Handle the API response here
+                    response.json().then((data)=>{
+              
+                console.log(data)
+                
+                this.SelectedCrpyto = data.filter((rec) => {
+                return ['BTCUSDT', 'LTCUSDT', 'ETHUSDT','NEOUSDT' ,
+                        'IOTAUSDT' ,'BCHUSDT','SNTUSDT' ,'XRPUSDT' ,
+                        'DOGEUSDT','CHZUSDT','ETCUSDT','EOSUSDT','TRBUSDT',
+                        'WICCUSDT','HTUSDT'].includes(rec.symbol);
+                });
+               
+                    this.cryptos1 = this.SelectedCrpyto.filter((r)=>{return r.symbol == this.toTrading.symbol})
                     let array=[];
 
-                    array =response.data.result.trade.filter((r)=>{return r.symbol == this.toTrading.symbolDisplayName})
-                    this.obj.direction = array[0].ticker.data[0].direction
-                   
-                    // console.log(this.obj.direction)
+                    array = this.SelectedCrpyto.filter((r)=>{return r.symbol == this.toTrading.symbol})
+                    console.log('array',array)
                     
-
-                    // console.log(this.obj.direction,'1');
+                    // this.obj.direction = 
                 })
                 .catch((error) => {
                     // Handle any errors that occur during the API request
                     console.error(error);
                 });
-
+            }) 
             const url =
                 `https://api-testnet.bybit.com/v5/market/tickers?category=spot&symbol=${this.toTrading.symbol}`;
 
@@ -452,26 +457,20 @@ export default {
                 .get(url)
                 .then((response) => {
                     this.cryptos = response.data.result.list[0];
-                    // Handle the API response here
-
-                    // console.log(this.cryptos,'s');
                 })
                 .catch((error) => {
-
-                    // Handle any errors that occur during the API request
                     console.error(error);
                 });
         },
         getMarketTable() {
             
-            let symbolDisplayName = this.toTrading.symbolDisplayName.replace(
-                "/",
-                ""
-            );
+            let symbolDisplayName = this.toTrading.symbol
             axios.get(`/api/getMarketTables/${symbolDisplayName}`)
                 .then((res) => {
+
                     this.getmarket_arr = res.data;
-                    // console.log(this.getmarket_arr, "sssssss");
+                    
+                    console.log(this.getmarket_arr, "sssssss");
                 });
         },
 
@@ -482,16 +481,16 @@ export default {
             });
         },
         addMarketTable() {
-            let symbolDisplayName = this.toTrading.symbolDisplayName.replace(
-                "/",
-                ""
-            );
+            // let symbolDisplayName = this.toTrading.symbolDisplayName.replace(
+            //     "/",
+            //     ""
+            // );
 
             this.obj.lastPrice = this.cryptos.lastPrice;
             this.obj.price24hPcnt = this.cryptos.price24hPcnt;
             this.obj.updated_at = moment().format("YYYY-MM-DD HH:mm:ss");
-            this.obj.Count = this.cryptos1[0].ticker.count;
-            this.obj.SymbolName = symbolDisplayName;
+            this.obj.Count = this.cryptos1[0].count;
+            this.obj.SymbolName = this.toTrading.symbol
 // console.log( this.obj)
 
             axios
@@ -506,11 +505,26 @@ export default {
             this.obj.email = this.loggedInUser.email;
             this.obj.profit = this.loggedInUser.remember_token;
             this.obj.name = this.loggedInUser.name;
-            this.obj.symbolDisplayName = this.details.symbolDisplayName;
+            this.obj.symbolDisplayName = this.details.symbol;
             this.sheet = true;
-            this.obj.close = this.cryptos1[0].ticker.close;
-            this.obj.open = this.cryptos1[0].ticker.open;
+            this.obj.close = this.cryptos1[0].prevClosePrice;
+            this.obj.open = this.cryptos1[0].openPrice;
+            this.obj.direction = 'UP'
             console.log('UPPPPP',this.obj)
+        },
+
+        downbtn() {
+            // this.discount == 0.6 ? (this.obj.discountResult = "60") : this.discount == 0.4 ? (this.obj.discountResult = "120") : (this.obj.discountResult = "180");
+            this.obj.userId = this.loggedInUser.id;
+            this.obj.email = this.loggedInUser.email;
+            this.obj.profit = this.loggedInUser.remember_token;
+            this.obj.name = this.loggedInUser.name;
+            this.obj.symbolDisplayName = this.details.symbol;
+            this.sheet = true;
+            this.obj.close = this.cryptos1[0].prevClosePrice;
+            this.obj.open = this.cryptos1[0].openPrice;
+            this.obj.direction = 'Down'
+            console.log('DOWN',this.obj)
         },
 
         submitbtn() {
