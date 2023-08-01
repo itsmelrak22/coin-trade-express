@@ -4,7 +4,7 @@
         <!-- User information -->
 
         <center>
-          <img src="https://cryptobtc01.com/imgs/user.png" alt="" width="80px" height="80px">
+          <img src="no-face.png" alt="" width="120px" height="80px">
           <br>
           <span style="font-weight: bold;">{{ Account.email }}</span>
           <br>

@@ -3,17 +3,17 @@
     <div class="home">
       <div style="margin-bottom: 10px;">
         <div>
-          <img style="width: 100%; border-radius: 5px; height: 100%;" src="https://omicomadswork.com/upload/1667207779419729.jpeg" alt="no img">
+          <img style="width: 100%; border-radius: 5px; height: 100%;" src="BTC.jpeg" alt="no img">
           <v-row no-gutters>
             <v-col cols="4" md="2" style="margin-bottom: 20px;">
               <v-card height="150px" flat>
                 <v-card-title>
-                  <b>{{ CoinDataBTC.name }}</b>
+                  <b>{{( CoinDataBTC.symbol.substring(0, 3)) }}</b>
                 </v-card-title>
                 <v-card-text>
-                  <h3 :style="CoinDataBTC.change > 0 ? 'color:green;' : 'color:red;'"><b>{{CoinDataBTC.now_price}}</b></h3>
-                  <h3 :style="CoinDataBTC.change > 0 ? 'color:green;' : 'color:red;'"><b><v-icon color="red" v-if="CoinDataBTC.change <= 0">mdi-menu-down</v-icon> <v-icon color="green" v-if="CoinDataBTC.change >= 0">mdi-menu-up</v-icon>
-                    {{CoinDataBTC.change}}%</b></h3>
+                  <h3 :style="CoinDataBTC.priceChangePercent > 0 ? 'color:green;' : 'color:red;'"><b>{{(CoinDataBTC.askPrice.slice(0, 8))}}</b></h3>
+                  <h3 :style="CoinDataBTC.priceChangePercent > 0 ? 'color:green;' : 'color:red;'"><b><v-icon color="red" v-if="CoinDataBTC.priceChangePercent <= 0">mdi-menu-down</v-icon> <v-icon color="green" v-if="CoinDataBTC.priceChangePercent >= 0">mdi-menu-up</v-icon>
+                    {{CoinDataBTC.priceChangePercent}}%</b></h3>
                 </v-card-text>
                 <v-card flat max-height="220px">
                 </v-card>
@@ -23,12 +23,12 @@
             <v-col cols="4" md="2" style="margin-bottom: 20px;">
               <v-card height="150px" flat>
                 <v-card-title>
-                  <b>{{ CoinDataETH.name }}</b>
+                  <b>{{ (CoinDataETH.symbol.substring(0, 3)) }}</b>
                 </v-card-title>
                 <v-card-text>
-                  <h3 :style="CoinDataETH.change > 0 ? 'color:green;' : 'color:red;'"><b>{{CoinDataETH.now_price}}</b></h3>
-                  <h3 :style="CoinDataETH.change > 0 ? 'color:green;' : 'color:red;'"><b><v-icon color="red" v-if="CoinDataETH.change <= 0">mdi-menu-down</v-icon> <v-icon color="green" v-if="CoinDataETH.change >= 0">mdi-menu-up</v-icon>
-                    {{CoinDataETH.change}}%</b></h3>
+                  <h3 :style="CoinDataETH.priceChangePercent > 0 ? 'color:green;' : 'color:red;'"><b>{{(CoinDataETH.askPrice.slice(0, 8))}}</b></h3>
+                  <h3 :style="CoinDataETH.priceChangePercent > 0 ? 'color:green;' : 'color:red;'"><b><v-icon color="red" v-if="CoinDataETH.priceChangePercent <= 0">mdi-menu-down</v-icon> <v-icon color="green" v-if="CoinDataETH.priceChangePercent >= 0">mdi-menu-up</v-icon>
+                    {{CoinDataETH.priceChangePercent}}%</b></h3>
                 </v-card-text>
                 <v-card flat max-height="220px">
 
@@ -39,12 +39,12 @@
             <v-col cols="4" md="2" style="margin-bottom: 20px;">
               <v-card height="150px" flat>
                 <v-card-title>
-                  <b>{{ CoinDataLTC.name }}</b>
+                  <b>{{ (CoinDataLTC.symbol.substring(0, 3)) }}</b>
                 </v-card-title>
                 <v-card-text>
-                  <h3 :style="CoinDataLTC.change > 0 ? 'color:green;' : 'color:red;'"><b>{{CoinDataLTC.now_price}}</b></h3>
-                  <h3 :style="CoinDataLTC.change > 0 ? 'color:green;' : 'color:red;'"><b><v-icon color="red" v-if="CoinDataLTC.change <= 0">mdi-menu-down</v-icon> <v-icon color="green" v-if="CoinDataLTC.change >= 0">mdi-menu-up</v-icon>
-                    {{CoinDataLTC.change}}%</b></h3>
+                  <h3 :style="CoinDataLTC.priceChangePercent > 0 ? 'color:green;' : 'color:red;'"><b>{{(CoinDataLTC.askPrice.slice(0, 8))}}</b></h3>
+                  <h3 :style="CoinDataLTC.priceChangePercent > 0 ? 'color:green;' : 'color:red;'"><b><v-icon color="red" v-if="CoinDataLTC.priceChangePercent <= 0">mdi-menu-down</v-icon> <v-icon color="green" v-if="CoinDataLTC.priceChangePercent >= 0">mdi-menu-up</v-icon>
+                    {{CoinDataLTC.priceChangePercent}}%</b></h3>
                 </v-card-text>
                 <v-card flat max-height="220px">
 
@@ -55,7 +55,8 @@
           <br>
           <div>
             <v-toolbar dense flat style="border-radius:10px; background: radial-gradient(circle, #fff 0%, #8ecdf1 100%);">
-              <img src="https://cryptobtc01.com/assets/images/icon_quick_recharge.22f59be.png" style="height: 40px;">
+              
+              <img src="wallet.png" title="wallet icons" style="height: 40px;">
               <b> Quick recharge </b>
               <v-spacer></v-spacer>
               <v-btn href="/DepositView" color="primary" width="60px">
@@ -74,31 +75,55 @@
             </thead>
             <tbody>
               <tr v-for="(item, i) in cryptoTable" :key="i" class="text-center" @click="toView(item)">
-                <td>
+                <td v-if="item.symbol.substring(0, 4) == 'DOGE'">
                   <v-avatar size="30">
                     <img
                       alt="no image found"
-                      :src="`${item.icon}`"
+                      :src="`https://assets.coincap.io/assets/icons/${ item.symbol.substring(0, 4).toLowerCase()}@2x.png`"
                       width="40"
                       height="40px"
                     />
                   </v-avatar>
-                  {{item.name}}
+                {{ item.symbol.substring(0, 4)}}
+                </td>
+                <td  v-else-if="item.symbol.substring(0, 4) == 'IOTA'">
+                  <v-avatar size="30">
+                    <img
+                    
+                    alt="no image found"
+                    :src="`https://assets.coincap.io/assets/icons/m${ item.symbol.substring(0, 4).toLowerCase()}@2x.png`"
+                    width="40"
+                    height="40px"
+                  />
+                  </v-avatar>
+                {{ item.symbol.substring(0, 4) }}
+                </td>
+                <td  v-else>
+                  <v-avatar size="30">
+                    <img
+                    
+                    alt="no image found"
+                    :src="`https://assets.coincap.io/assets/icons/${ item.symbol.substring(0, 3).toLowerCase()}@2x.png`"
+                    width="40"
+                    height="40px"
+                  />
+                  </v-avatar>
+                {{ item.symbol.substring(0, 3) }}
                 </td>
                 <td>
                   <center>
-                    {{item.now_price}}
+                    {{item.lastPrice.slice(0, 8)}}
                   </center>
                 </td>
                 <td>
                   <center>
                     <!-- red -->
-                    <v-chip dark v-if="item.change <= 0" :color="item.change < 0 ? 'error' : '#12a36e'">
-                      {{item.change}}%
+                    <v-chip dark v-if="item.priceChangePercent <= 0" :color="item.priceChangePercent < 0 ? 'error' : '#12a36e'">
+                      {{item.priceChangePercent}}%
                     </v-chip>
                     <!-- green -->
-                    <v-chip dark v-if="item.change > 0" :color="item.change > 0 ? '#12a36e' : 'error'">
-                      {{item.change}}%
+                    <v-chip dark v-if="item.priceChangePercent > 0" :color="item.priceChangePercent > 0 ? '#12a36e' : 'error'">
+                      {{item.priceChangePercent}}%
                     </v-chip>
                   </center>
                 </td>
@@ -156,16 +181,19 @@ import Sparkline from './Sparkline.vue'
 // import { getTradeOrder } from '../tradeOrderService';
 import moment from "moment";
 import Swal from "sweetalert2";
+// const proxyUrl = 'https://proxy.mysoftnotes.com/proxy.php?curl=';
+let cryptoData = [];
+
 export default {
   sockets: {
         // NOTE : SOCKET 
-        // updateReceived: function(socket) {
-        //     console.log(socket)
-        //     if( socket.updateType && socket.updateType == 'GetTradeDetails'){
-        //         console.log('GetTradeDetails')
-        //         setInterval(() => { this.GetTradeDetails();}, 3000);
-        //     }
-        // }
+        updateReceived: function(socket) {
+            console.log(socket)
+            if( socket.updateType && socket.updateType == 'GetTradeDetails'){
+                console.log('GetTradeDetails')
+                this.GetTradeDetails();
+            }
+        }
     },
     data:()=>({
         CoinDataETH : {},
@@ -180,8 +208,9 @@ export default {
         percent : 0,
         volume : '',
         php : 0,
-        cryptoTable: [],
+        cryptoTable: {},
         overlay : false,
+
     }),
 
     created(){
@@ -189,7 +218,7 @@ export default {
       //  getTradeOrder(loggedInUserId);
       this.GetTradeDetails();
       this.getTradeOrder();
-      setInterval(() => { this.GetTradeDetails();}, 2000);
+      // setInterval(() => { this.GetTradeDetails();}, 2000);
         
     },
 
@@ -209,27 +238,39 @@ export default {
       },
 
         GetTradeDetails(){
-          // this.overlay = true;
-            axios.get(`https://omicomadswork.com/api/currency/getSymbol`).then((res)=>{
-
-              this.cryptoTable = res.data.result
-              // this.overlay = false;
-              // console.log('call', this.cryptoTable)
-              this.CoinDataBTC = this.cryptoTable[0]
-              this.CoinDataETH = this.cryptoTable[1]
-              this.CoinDataLTC = this.cryptoTable[3]
+          fetch(`https://data.binance.com/api/v3/ticker/24hr`).then((response)=>{
+            response.json().then((data)=>{
               
-              // this.$socket.emit('newUpdate', { updateType: "GetTradeDetails" }) //dto tinatwag ko si get
-              console.log('getGetTradeDetails')
-           
-             
-            })
+              console.log(data)
+              
+              this.cryptoTable = data.filter((rec) => {
+              return ['BTCUSDT', 'LTCUSDT', 'ETHUSDT','NEOUSDT' ,
+                      'IOTAUSDT' ,'BCHUSDT','SNTUSDT' ,'XRPUSDT' ,
+                      'DOGEUSDT','CHZUSDT','ETCUSDT','EOSUSDT','TRBUSDT',
+                      'WICCUSDT','HTUSDT'].includes(rec.symbol);
+            });
+
+                console.log('getGetTradeDetails',this.cryptoTable)
+                this.CoinDataBTC = this.cryptoTable[0]
+                this.CoinDataETH = this.cryptoTable[1]
+                this.CoinDataLTC = this.cryptoTable[3]
+                // for(let i=0; i<this.cryptoTable.length; i++){
+                //     if(this.cryptoTable[i].symbol == 'LTCUSDT'){
+                //       this.CoinDataLTC = this.cryptoTable[i]
+                //       console.log(this.CoinDataLTC)
+                //     }
+                // }
+            }) 
+          })
+            // this.cryptoTable = thiss.cryptoTable
+            console.log('1',this.cryptoTable)
         },// dto sa get nato lagi my nag babago sa na geget nya kaya na ttriger lagi ung emit socket
+
         toView(value){
-          
+          console.log(value)
           value.interval = '1d'
-          value.symbol = value.currency_name + value.legal_name
-          console.log('value',value)
+          // value.symbol = value.symbol.substring(0, 3).toLowerCase()
+          // console.log('value',value)
           this.$store.commit("STORE_TRADING", value);
           this.$router.push("/ViewTrade");
           
